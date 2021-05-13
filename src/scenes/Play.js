@@ -12,6 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('door', 'door.jpeg');
         this.load.image('background', 'background.jpeg');
         this.load.image('character', 'character.png');
+        this.load.image('tower', 'tower.jpeg');
     }
 
     create() {
@@ -23,6 +24,7 @@ class Play extends Phaser.Scene {
         this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 2600;
+        this.spacebar = this.input.keyboard.addKey('SPACE');
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
@@ -95,7 +97,11 @@ class Play extends Phaser.Scene {
             this.player.body.setAccelerationX(-this.ACCELERATION);
         } else if (cursors.right.isDown) {
             this.player.body.setAccelerationX(this.ACCELERATION);
-        } else {
+        } 
+        else if(this.spacebar.isDown){
+            this.buildTower(this.player);
+        }
+        else {
             //set acceleration to 0 so drag will take over
             this.player.body.setAccelerationX(0);
             this.player.body.setDragX(this.DRAG);
@@ -128,7 +134,12 @@ class Play extends Phaser.Scene {
 	    	this.jumps--;
 	    	this.jumping = false;
 	    }
-
-
+    }
+    buildTower(player){
+        this.tower=this.physics.add.sprite(player.x+80,player.y+40,'tower');
+        this.tower.body.immovable = true;
+        this.tower.body.allowGravity = false;
+        this.physics.add.collider(this.tower,player);
+        this.physics.add.collider(this.platforms,this.tower);
     }
 }
