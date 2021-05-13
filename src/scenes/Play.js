@@ -11,17 +11,30 @@ class Play extends Phaser.Scene {
         this.load.image('tile', 'dungeon_tile.png');
         this.load.image('door', 'door.jpeg');
         this.load.image('background', 'background.jpeg');
-
+        this.load.image('character', 'character.png');
     }
 
     create() {
+        //variables
+        this.ACCELERATION = 1500;
+        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_Y_VEL = 5000;
+        this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
+        this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
+        this.JUMP_VELOCITY = -700;
+        this.physics.world.gravity.y = 2600;
+
+        // set up Phaser-provided cursor key input
+        cursors = this.input.keyboard.createCursorKeys();
+
         this.addBackground();
         this.makePlatforms();
+        this.addCharacter();
+        this.addColliders();
     }
 
     addBackground() {
-        let background = this.add.image(width, height, 'background');
-        
+        this.add.image(width, height, 'background');
     }
 
     makePlatforms() {
@@ -45,14 +58,14 @@ class Play extends Phaser.Scene {
             this.platforms.add(groundTile);
         }
 
-        //platform 2
-        for(let i = tileSize*2; i < width-tileSize*20; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, height - tileSize*9, 'tile')
-            .setScale(SCALE, SCALE/5).setOrigin(0);
-            groundTile.body.immovable = true;
-            groundTile.body.allowGravity = false;
-            this.platforms.add(groundTile);
-        }
+        // //platform 2
+        // for(let i = tileSize*2; i < width-tileSize*20; i += tileSize) {
+        //     let groundTile = this.physics.add.sprite(i, height - tileSize*9, 'tile')
+        //     .setScale(SCALE, SCALE/5).setOrigin(0);
+        //     groundTile.body.immovable = true;
+        //     groundTile.body.allowGravity = false;
+        //     this.platforms.add(groundTile);
+        // }
 
         //platform 3
         for(let i = tileSize*10; i < width-tileSize*13; i += tileSize) {
@@ -63,11 +76,59 @@ class Play extends Phaser.Scene {
             this.platforms.add(groundTile);
         }
 
+        //door at top to next level
         let door = this.add.image(width/2 + 30, height - tileSize*13.9, 'door');
         door.setScale(0.1);
     }
 
+    addCharacter() {
+        this.player = new Player(this, this.MAX_X_VEL, this.MAX_Y_VEL);
+    }
+
+    addColliders() {
+        this.physics.add.collider(this.player, this.platforms);
+    }
+
     update() {
+        //left arrow key down
+        if (cursors.left.isDown) {
+            this.player.body.setAccelerationX(-this.ACCELERATION);
+        } else if (cursors.right.isDown) {
+            this.player.body.setAccelerationX(this.ACCELERATION);
+        } else {
+            //set acceleration to 0 so drag will take over
+            this.player.body.setAccelerationX(0);
+            this.player.body.setDragX(this.DRAG);
+        }
+        this.jumpingLogic();
+    }
+
+    //jump logic for player
+    jumpingLogic() {
+        this.player.isGrounded = this.player.body.touching.down;
+        if(this.player.isGrounded) {
+	    	this.jumps = this.MAX_JUMPS;
+	    	this.jumping = false;
+	    } else {
+            console.log("not grounded");
+        }
+
+        // allow steady velocity change up to a certain key down duration
+        // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
+	    if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
+            console.log("jump");
+	        this.player.body.velocity.y = this.JUMP_VELOCITY;
+	        this.jumping = true;
+	    } else {
+	    	console.log("not pressing up key");
+	    }
+        // finally, letting go of the UP key subtracts a jump
+        // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
+	    if(this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+	    	this.jumps--;
+	    	this.jumping = false;
+	    }
+
 
     }
 }
