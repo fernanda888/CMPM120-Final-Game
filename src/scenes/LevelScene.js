@@ -17,11 +17,11 @@ class LevelScene extends Phaser.Scene {
 
         //adds three level selections to the menu
         var playButton1 = this.add.image(game.config.width/2 + 7.5,
-            game.config.height/3 + 36.5, 'button1');
+            game.config.height/3 + 36.5, 'button3');
         var playButton2 = this.add.image(game.config.width/2 + 7.5,
             game.config.height/2 + 132, 'button2');
         var playButton3 = this.add.image(game.config.width/2 + 7.5,
-            game.config.height/1.5 + 236.5, 'button3');
+            game.config.height/1.5 + 236.5, 'button1');
 
         //foreground rocks
         this.fgMountains = this.add.tileSprite(0, 0, game.config.width, 
