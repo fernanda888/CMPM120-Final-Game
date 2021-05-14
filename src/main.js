@@ -7,8 +7,8 @@ const tileSize = 30;
 //main game object
 let config = {
     type: Phaser.AUTO,
-    width: 840,
-    height: 525,
+    width: 1500,
+    height: 1000,
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
@@ -22,7 +22,7 @@ let config = {
             }
         }
     },
-    scene: [Play]
+    scene: [TitleScene, LevelScene, Play, EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
@@ -32,6 +32,7 @@ let keyF, keyR, keyLEFT, keyRIGHT;
 // set UI sizes
 let borderUISize = game.config.height / 15;
 console.log(borderUISize);
+let scrollSpeed = 4;
 let borderPadding = borderUISize / 3;
 let width = game.config.width;
 let height = game.config.height;

@@ -4,8 +4,19 @@ class TitleScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('titleScreen', 'assets/titleScreen.png');
-        this.load.image('playButton', 'assets/playButton.png');
+        // set load path
+        this.load.path = 'assets/';
+        this.load.image('titleScreen', 'titleScreen.png');
+        this.load.image('playButton', 'playButton.png');
+        this.load.image('bgClouds', 'bgClouds.png');
+        this.load.image('fgClouds', 'fgClouds.png');
+        this.load.image('bgMountains', 'bgMountains.png');
+        this.load.image('fgMountains', 'fgMountains.png');
+        this.load.image('sky', 'sky.png');
+        this.load.image('levelTower', 'levelTower.png');
+        this.load.image('button1', 'button1.png');
+        this.load.image('button2', 'button2.png');
+        this.load.image('button3', 'button3.png');
     }
 
     create() {
@@ -27,7 +38,7 @@ class TitleScene extends Phaser.Scene {
     }
 
     clickButton() {
-        this.scene.start('playScene');
+        this.scene.start('levelScene');
     }
 
 }
