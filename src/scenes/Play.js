@@ -7,6 +7,11 @@ class Play extends Phaser.Scene {
         //set load path
         this.load.path = 'assets/';
 
+        //load sound
+        this.load.audio('jumping', 'jumping.mp3');
+        this.load.audio('walking', 'walking_sound.mp3');
+        this.load.audio('tower', 'tower.mp3');
+
         //load images
         this.load.image('tile', 'dungeon_tile.png');
         this.load.image('door', 'door.jpeg');
@@ -28,6 +33,21 @@ class Play extends Phaser.Scene {
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
+
+        //set up sounds
+        this.walking_sound = this.sound.add('walking', { 
+            mute: false,
+            loop: false,
+            volume: .2,
+        });
+        this.jumping_sound = this.sound.add('jumping', { 
+            mute: false,
+            volume: .2,
+        });
+        this.tower_sound = this.sound.add('tower', { 
+            mute: false,
+            volume: .2,
+        });
 
         this.addBackground();
         this.addInstructions();
@@ -101,9 +121,14 @@ class Play extends Phaser.Scene {
         //left arrow key down
         if (cursors.left.isDown) {
             this.player.body.setAccelerationX(-this.ACCELERATION);
+            this.walking_sound.play();
+            this.player.setFlip(true,false);
         } else if (cursors.right.isDown) {  //right arrow key down
             this.player.body.setAccelerationX(this.ACCELERATION);
+            this.walking_sound.play();
+            this.player.resetFlip();
         } else if (this.spacebar.isDown) {    //spacebar key down
+            this.tower_sound.play();
             this.buildTower();
         } else {
             //set acceleration to 0 so drag will take over
@@ -128,6 +153,7 @@ class Play extends Phaser.Scene {
             console.log("jump");
             this.player.body.velocity.y = this.JUMP_VELOCITY;
             this.jumping = true;
+            this.jumping_sound.play();
         } else {
             console.log("not pressing up key");
         }
@@ -139,7 +165,7 @@ class Play extends Phaser.Scene {
         }
     }
     buildTower() {
-        this.tower = this.physics.add.sprite(this.player.x + 80, this.player.y - 30, 'tower');
+        this.tower = this.physics.add.sprite(this.player.x + 80, this.player.y - 15, 'tower');
         this.tower.setScale(0.2);
         this.tower.body.immovable = true;
         this.tower.body.allowGravity = false;

@@ -6,8 +6,8 @@ class TitleScene extends Phaser.Scene {
     preload() {
         // set load path
         this.load.path = 'assets/';
-        this.load.image('titleScreen', 'titleScreen.png');
-        this.load.image('playButton', 'playButton.png');
+        this.load.image('titleScreen', 'sky.png');
+        this.load.image('playButton', 'PLAY.png');
         this.load.image('bgClouds', 'bgClouds.png');
         this.load.image('fgClouds', 'fgClouds.png');
         this.load.image('bgMountains', 'bgMountains.png');
@@ -29,12 +29,13 @@ class TitleScene extends Phaser.Scene {
         //button play
         var playButton = this.add.image(game.config.width,
             game.config.height, 'playButton');
-        playButton.scale = 0.5
-        playButton.setOrigin(2, 7);
+        playButton.scale = .5;
+        playButton.setOrigin(3.5, 12);
         playButton.setInteractive();
         playButton.on('pointerdown', () => { 
             this.clickButton();
         });
+        this.add.image(game.config.width, game.config.height, 'fgClouds').setOrigin(1,1);
     }
 
     clickButton() {
