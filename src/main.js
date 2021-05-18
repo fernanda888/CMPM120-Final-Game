@@ -45,4 +45,6 @@ let cont=false;
 let quit=false
 let playNow=false;
 let newHighScore = false;
+let towerExists=false;
+let playerWalking=false;
 

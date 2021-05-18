@@ -13,11 +13,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setBounce(0.5);
         this.setDragY(200);
         this.setDepth(1);
-        // this.body.checkCollision.down=true; 
-        // this.body.checkCollision.left=true; 
-        // this.body.checkCollision.right=true; 
-        // this.body.checkCollision.up=true;             
-        // this.newCheese = true;                 // custom property to control Trap spawning
     }
 
     update() {

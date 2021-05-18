@@ -37,8 +37,9 @@ class Play extends Phaser.Scene {
         //set up sounds
         this.walking_sound = this.sound.add('walking', { 
             mute: false,
-            loop: false,
-            volume: .2,
+            loop: true,
+            rate:4,
+            volume: .05
         });
         this.jumping_sound = this.sound.add('jumping', { 
             mute: false,
@@ -112,6 +113,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
     }
@@ -121,19 +123,33 @@ class Play extends Phaser.Scene {
         //left arrow key down
         if (cursors.left.isDown) {
             this.player.body.setAccelerationX(-this.ACCELERATION);
-            this.walking_sound.play();
+            playerWalking=true;
             this.player.setFlip(true,false);
         } else if (cursors.right.isDown) {  //right arrow key down
             this.player.body.setAccelerationX(this.ACCELERATION);
-            this.walking_sound.play();
+            playerWalking=true;
             this.player.resetFlip();
         } else if (this.spacebar.isDown) {    //spacebar key down
             this.tower_sound.play();
+            if(towerExists==true){
+                this.tower.destroy();
+            }
             this.buildTower();
         } else {
             //set acceleration to 0 so drag will take over
             this.player.body.setAccelerationX(0);
+            this.walking_sound.stop();
+            playerWalking=false;
             this.player.body.setDragX(this.DRAG);
+        }
+    }
+
+    playSounds(){
+        if (cursors.left.isDown && playerWalking==false){
+            this.walking_sound.play();
+        }
+        if (cursors.right.isDown && playerWalking==false){
+            this.walking_sound.play();
         }
     }
 
@@ -165,10 +181,8 @@ class Play extends Phaser.Scene {
         }
     }
     buildTower() {
-        this.tower = this.physics.add.sprite(this.player.x + 80, this.player.y - 15, 'tower');
-        this.tower.setScale(0.2);
-        this.tower.body.immovable = true;
-        this.tower.body.allowGravity = false;
+        this.tower= new Tower (this, this.player);
+        towerExists=true;
         this.physics.add.collider(this.tower, this.player);
         this.physics.add.collider(this.platforms, this.tower);
     }
