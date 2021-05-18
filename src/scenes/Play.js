@@ -55,6 +55,7 @@ class Play extends Phaser.Scene {
         this.makePlatforms();
         this.addCharacter();
         this.addColliders();
+        this.addCamera();
     }
 
     addBackground() {
@@ -111,11 +112,17 @@ class Play extends Phaser.Scene {
     addColliders() {
         this.physics.add.collider(this.player, this.platforms);
     }
+    addCamera(){
+        this.cameras.main.setBounds(0,0,width,height);
+        this.cameras.main.startFollow(this.player, true);
+        this.cameras.main.setZoom(1.7);
+    }
 
     update() {
         this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
+        this.cameraMovement();
     }
 
     //logic for keys pressed
@@ -125,10 +132,12 @@ class Play extends Phaser.Scene {
             this.player.body.setAccelerationX(-this.ACCELERATION);
             playerWalking=true;
             this.player.setFlip(true,false);
+            facingRight=false;
         } else if (cursors.right.isDown) {  //right arrow key down
             this.player.body.setAccelerationX(this.ACCELERATION);
             playerWalking=true;
             this.player.resetFlip();
+            facingRight=true;
         } else if (this.spacebar.isDown) {    //spacebar key down
             this.tower_sound.play();
             if(towerExists==true){
@@ -180,6 +189,21 @@ class Play extends Phaser.Scene {
             this.jumping = false;
         }
     }
+    cameraMovement(){
+        this.cam= this.cameras.main;
+        if(moveCam){
+            if(this.cursors.left.isDown){
+                this.cam.scrollX-=5;
+            }
+            else if(this.cursors.right.isDow){
+                this.cam.scrollX+=5;
+            }
+            else if (this.spacebar.isDown){
+                this.cam.scrollY+=10;
+            }
+        }
+    }
+
     buildTower() {
         this.tower= new Tower (this, this.player);
         towerExists=true;

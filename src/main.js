@@ -47,4 +47,5 @@ let playNow=false;
 let newHighScore = false;
 let towerExists=false;
 let playerWalking=false;
-
+let moveCam=false;
+let facingRight=true;
