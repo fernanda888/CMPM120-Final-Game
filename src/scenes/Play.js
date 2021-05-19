@@ -63,9 +63,9 @@ class Play extends Phaser.Scene {
     }
 
     addInstructions() {
-        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
+        this.add.text(100, 700, 'Instructions: use right and left arrow keys to' +
             ' move and the up arrow key to jump. Use the spacebar to build ' + 
-            'towers to reach greater heights!', {fontFamily: 'Courier', fontSize: '20px', 
+            'towers to reach greater heights!', {fontFamily: 'Courier', fontSize: '15px', 
             color: '#fff', lineSpacing: 10, wordWrap: { width: width/3,},
         });
     }
@@ -174,7 +174,7 @@ class Play extends Phaser.Scene {
 
         // allow steady velocity change up to a certain key down duration
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-        if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
+        if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 200)) {
             console.log("jump");
             this.player.body.velocity.y = this.JUMP_VELOCITY;
             this.jumping = true;
