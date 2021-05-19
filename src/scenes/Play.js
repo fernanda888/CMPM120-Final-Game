@@ -18,6 +18,12 @@ class Play extends Phaser.Scene {
         this.load.image('background', 'background.jpeg');
         this.load.image('character', 'character.png');
         this.load.image('tower', 'tower.png');
+
+        //load the json images (These do not work)
+        /*
+        this.load.image('tiles', 'rockSheet.png');
+        this.load.tilemapTiledJSON("tilemapJSON", "tileTest.json");
+        */
     }
 
     create() {
@@ -56,6 +62,19 @@ class Play extends Phaser.Scene {
         this.addCharacter();
         this.addColliders();
         this.addCamera();
+
+        /*
+        //add the tilemap format to the scene
+        const map = this.add.tilemap('tilemapJSON');
+        const tileset = map.addTilesetImage('tileset', 'tiles' );
+        const terrainLayer = map.createLayer('tiles', tileset, 0, 0);
+        const bgLayer = map.createLayer('background', tileset, 0, 0);
+        terrainLayer.setCollisionByProperty({
+            collides: true
+        });
+        this.player.body.setCollideWorldBounds(true);
+        this.physics.add.collider(this.player, terrainLayer);
+        */
     }
 
     addBackground() {
@@ -164,7 +183,7 @@ class Play extends Phaser.Scene {
 
     //jump logic for player
     jumpingLogic() {
-        this.player.isGrounded = this.player.body.touching.down;
+        this.player.isGrounded = this.player.body.blocked.down;
         if (this.player.isGrounded) {
             this.jumps = this.MAX_JUMPS;
             this.jumping = false;

@@ -6,7 +6,7 @@ const tileSize = 30;
 
 //main game object
 let config = {
-    type: Phaser.AUTO,
+    type: Phaser.CANVAS,
     width: 1500,
     height: 1000,
     scale: {
@@ -22,6 +22,7 @@ let config = {
             }
         }
     },
+    zoom: 1,
     scene: [TitleScene, LevelScene, Play, EndScene]
   }
   //define game
