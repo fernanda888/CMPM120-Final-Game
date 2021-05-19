@@ -63,9 +63,9 @@ class Play extends Phaser.Scene {
     }
 
     addInstructions() {
-        this.add.text(100, 100, 'Instructions: use right and left arrow keys to' +
+        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
             ' move and the up arrow key to jump. Use the spacebar to build ' + 
-            'towers to reach greater heights', {fontFamily: 'Courier', fontSize: '20px', 
+            'towers to reach greater heights!', {fontFamily: 'Courier', fontSize: '20px', 
             color: '#fff', lineSpacing: 10, wordWrap: { width: width/3,},
         });
     }
