@@ -13,15 +13,11 @@ class Play extends Phaser.Scene {
         this.load.audio('tower', 'tower.mp3');
 
         //load images
-        // this.load.image('tile', 'dungeon_tile.png');
-        // this.load.image('door', 'door.jpeg');
-        // this.load.image('background', 'background.jpeg');
         this.load.image('character', 'character.png');
         this.load.image('tower', 'tower.png');
         this.load.image('l1enemy', 'enemy_l1.jpeg');
 
-        //load the json images (These do not work)
-
+        //load the json images 
         this.load.image('tiles', 'rockSheet.png');
         this.load.tilemapTiledJSON("tilemapJSON", "tileTest.json");
 
@@ -41,10 +37,8 @@ class Play extends Phaser.Scene {
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
 
-        //set up sounds
         this.addSounds();
         this.addCharacter();
-
         this.addBackgroundTileMap();
         this.addInstructions();
         this.spawnL1Enemies();
@@ -58,8 +52,6 @@ class Play extends Phaser.Scene {
         const tileset = map.addTilesetImage('rockSheet', 'tiles');
         const bgLayer = map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = map.createLayer('tiles', tileset, 0, 0);
-        //this.player.body.setCollideWorldBounds(true);
-
         this.terrainLayer.setCollisionByProperty({
             collides: true
         });
@@ -83,10 +75,6 @@ class Play extends Phaser.Scene {
         });
     }
 
-    // addBackground() {
-    //     this.add.image(width, height, 'background');
-    // }
-
     addInstructions() {
         this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
             ' move and the up arrow key to jump. Use the spacebar to build ' +
@@ -96,47 +84,11 @@ class Play extends Phaser.Scene {
         });
     }
 
-    // makePlatforms() {
-    //     //add platform tiles
-    //     this.platforms = this.add.group();
-    //     //ground
-    //     for (let i = 0; i < width; i += tileSize) {
-    //         let groundTile = this.physics.add.sprite(i, height - tileSize * 1.5, 'tile')
-    //             .setScale(SCALE, SCALE / 4).setOrigin(0);
-    //         groundTile.body.allowGravity = false;
-    //         groundTile.body.setImmovable();
-    //         this.platforms.add(groundTile);
-    //     }
-
-    //     //platform 1
-    //     for (let i = tileSize * 13; i < width - tileSize * 8; i += tileSize) {
-    //         let groundTile = this.physics.add.sprite(i, height - tileSize * 5, 'tile')
-    //             .setScale(SCALE, SCALE / 5).setOrigin(0);
-    //         groundTile.body.immovable = true;
-    //         groundTile.body.allowGravity = false;
-    //         this.platforms.add(groundTile);
-    //     }
-
-    //     //platform 3
-    //     for (let i = tileSize * 10; i < width - tileSize * 13; i += tileSize) {
-    //         let groundTile = this.physics.add.sprite(i, height - tileSize * 20, 'tile')
-    //             .setScale(SCALE, SCALE / 5).setOrigin(0);
-    //         groundTile.body.immovable = true;
-    //         groundTile.body.allowGravity = false;
-    //         this.platforms.add(groundTile);
-    //     }
-
-    //     //door at top to next level
-    //     let door = this.add.image(width / 2 + 30, height - tileSize * 20.9, 'door');
-    //     door.setScale(0.1);
-    // }
-
     addCharacter() {
         this.player = new Player(this, this.MAX_X_VEL, this.MAX_Y_VEL);
     }
 
     addColliders() {
-        //this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.player, this.terrainLayer);
         this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
             this.scene.start('endScreen');
@@ -259,7 +211,6 @@ class Play extends Phaser.Scene {
         this.tower = new Tower(this, this.player);
         towerExists = true;
         this.physics.add.collider(this.tower, this.player);
-        //this.physics.add.collider(this.platforms, this.tower);
         this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
             enemy.destroy();
         });
