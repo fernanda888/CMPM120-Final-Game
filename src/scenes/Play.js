@@ -89,12 +89,21 @@ class Play extends Phaser.Scene {
     }
 
     addColliders() {
-        this.physics.add.collider(this.player, this.terrainLayer);
-        this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
-            this.scene.start('endScreen');
-        });
+        if (!this.player.destroyed) {
+            this.physics.add.collider(this.player, this.terrainLayer);
+            this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
+                this.player.destroyed = true;
+                this.player.destroy();
+                this.jumping_sound.destroy();
+                this.walking_sound.destroy();
+                console.log("player destroyed");
+                //change scene to end game
+                this.scene.start('endScreen');
+            });
 
-        this.physics.add.collider(this.terrainLayer, this.l1EnemyGroup);
+            this.physics.add.collider(this.terrainLayer, this.l1EnemyGroup);
+        }
+
     }
 
     spawnL1Enemies() {
@@ -136,29 +145,32 @@ class Play extends Phaser.Scene {
     //logic for keys pressed
     keyDetection() {
         //left arrow key down
-        if (cursors.left.isDown) {
-            this.player.body.setAccelerationX(-this.ACCELERATION);
-            playerWalking = true;
-            this.player.setFlip(true, false);
-            facingRight = false;
-        } else if (cursors.right.isDown) {  //right arrow key down
-            this.player.body.setAccelerationX(this.ACCELERATION);
-            playerWalking = true;
-            this.player.resetFlip();
-            facingRight = true;
-        } else if (this.spacebar.isDown) {    //spacebar key down
-            this.tower_sound.play();
-            if (towerExists == true) {
-                this.tower.destroy();
+        if (!this.player.destroyed) {
+            if (cursors.left.isDown) {
+                this.player.body.setAccelerationX(-this.ACCELERATION);
+                playerWalking = true;
+                this.player.setFlip(true, false);
+                facingRight = false;
+            } else if (cursors.right.isDown) {  //right arrow key down
+                this.player.body.setAccelerationX(this.ACCELERATION);
+                playerWalking = true;
+                this.player.resetFlip();
+                facingRight = true;
+            } else if (this.spacebar.isDown) {    //spacebar key down
+                this.tower_sound.play();
+                if (towerExists == true) {
+                    this.tower.destroy();
+                }
+                this.buildTower();
+            } else {
+                //set acceleration to 0 so drag will take over
+                this.player.body.setAccelerationX(0);
+                this.walking_sound.stop();
+                playerWalking = false;
+                this.player.body.setDragX(this.DRAG);
             }
-            this.buildTower();
-        } else {
-            //set acceleration to 0 so drag will take over
-            this.player.body.setAccelerationX(0);
-            this.walking_sound.stop();
-            playerWalking = false;
-            this.player.body.setDragX(this.DRAG);
         }
+
     }
 
     playSounds() {
@@ -172,25 +184,29 @@ class Play extends Phaser.Scene {
 
     //jump logic for player
     jumpingLogic() {
-        this.player.isGrounded = this.player.body.blocked.down;
-        if (this.player.isGrounded) {
-            this.jumps = this.MAX_JUMPS;
-            this.jumping = false;
+        if (!this.player.destroyed) {
+            this.player.isGrounded = this.player.body.blocked.down;
+            if (this.player.isGrounded) {
+                this.jumps = this.MAX_JUMPS;
+                this.jumping = false;
+            }
+    
+            // allow steady velocity change up to a certain key down duration
+            // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
+            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
+                this.player.body.velocity.y = this.JUMP_VELOCITY;
+                this.jumping = true;
+                this.jumping_sound.play();
+            }
+            // finally, letting go of the UP key subtracts a jump
+            // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
+            if (this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+                this.jumps--;
+                this.jumping = false;
+            }
         }
-
-        // allow steady velocity change up to a certain key down duration
-        // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-        if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
-            this.player.body.velocity.y = this.JUMP_VELOCITY;
-            this.jumping = true;
-            this.jumping_sound.play();
-        }
-        // finally, letting go of the UP key subtracts a jump
-        // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
-        if (this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
-            this.jumps--;
-            this.jumping = false;
-        }
+        
+       
     }
     cameraMovement() {
         this.cam = this.cameras.main;
@@ -208,11 +224,15 @@ class Play extends Phaser.Scene {
     }
 
     buildTower() {
-        this.tower = new Tower(this, this.player);
-        towerExists = true;
-        this.physics.add.collider(this.tower, this.player);
-        this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
-            enemy.destroy();
-        });
+
+        if (!this.player.destroyed) {
+            this.tower = new Tower(this, this.player);
+            towerExists = true;
+            this.physics.add.collider(this.tower, this.player);
+            this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
+                enemy.destroy();
+            });
+        }
+
     }
 }
