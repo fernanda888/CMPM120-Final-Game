@@ -24,6 +24,7 @@ class Play extends Phaser.Scene {
         this.load.image('tiles', 'rockSheet.png');
         this.load.tilemapTiledJSON("tilemapJSON", "tileTest.json");
         */
+        this.load.image('l1enemy', 'enemy_l1.jpeg');
     }
 
     create() {
@@ -41,17 +42,29 @@ class Play extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys();
 
         //set up sounds
-        this.walking_sound = this.sound.add('walking', { 
+        this.addSounds();
+        this.addBackground();
+        this.addInstructions();
+        this.makePlatforms();
+        this.addCharacter();
+        this.spawnL1Enemies();
+        this.addColliders();
+        this.addCamera();
+    }
+
+    addSounds() {
+        //set up sounds
+        this.walking_sound = this.sound.add('walking', {
             mute: false,
             loop: true,
-            rate:4,
+            rate: 4,
             volume: .05
         });
-        this.jumping_sound = this.sound.add('jumping', { 
+        this.jumping_sound = this.sound.add('jumping', {
             mute: false,
             volume: .2,
         });
-        this.tower_sound = this.sound.add('tower', { 
+        this.tower_sound = this.sound.add('tower', {
             mute: false,
             volume: .2,
         });
@@ -130,7 +143,32 @@ class Play extends Phaser.Scene {
 
     addColliders() {
         this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.player, this.l1EnemyGroup, () => {       
+            this.scene.start('endScreen');
+        });
+        this.physics.add.collider(this.platforms, this.l1EnemyGroup);
     }
+
+    spawnL1Enemies() {
+        //set up L1 enemy group
+        this.l1EnemyGroup = this.add.group({
+            runChildUpdate: true    // make sure update runs on group children
+        });
+
+        //wait before spawning
+        console.log("adding enemies");
+        this.addL1Enemy();
+    }
+
+    addL1Enemy() {
+        let speedVariance = Phaser.Math.Between(10, 13);
+        this.time.delayedCall(3000, () => {
+            console.log("adding level 1 enemy:");
+            let enemy = new L1Enemy(this, -100 - speedVariance, this.player);
+            this.l1EnemyGroup.add(enemy);
+        });
+    }
+
     addCamera(){
         this.cameras.main.setBounds(0,0,width,height);
         this.cameras.main.startFollow(this.player, true);
@@ -187,20 +225,15 @@ class Play extends Phaser.Scene {
         if (this.player.isGrounded) {
             this.jumps = this.MAX_JUMPS;
             this.jumping = false;
-        } else {
-            console.log("not grounded");
-        }
+        } 
 
         // allow steady velocity change up to a certain key down duration
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-        if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 200)) {
-            console.log("jump");
+        if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
             this.player.body.velocity.y = this.JUMP_VELOCITY;
             this.jumping = true;
             this.jumping_sound.play();
-        } else {
-            console.log("not pressing up key");
-        }
+        } 
         // finally, letting go of the UP key subtracts a jump
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
         if (this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
@@ -228,5 +261,8 @@ class Play extends Phaser.Scene {
         towerExists=true;
         this.physics.add.collider(this.tower, this.player);
         this.physics.add.collider(this.platforms, this.tower);
+        this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy)=> {
+            enemy.destroy();
+        });
     }
 }

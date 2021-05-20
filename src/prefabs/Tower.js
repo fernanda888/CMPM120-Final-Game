@@ -2,10 +2,10 @@ class Tower extends Phaser.Physics.Arcade.Sprite {
     constructor(scene,player) {
         // call Phaser Physics Sprite constructor
         if (facingRight){
-            super(scene, player.x + 80, player.y - 25, 'tower');
+            super(scene, player.x + 80, player.y - 30, 'tower');
         }
         else{
-            super(scene, player.x - 80, player.y - 25, 'tower');
+            super(scene, player.x - 80, player.y - 30, 'tower');
         }
          
         // set up physics sprite
