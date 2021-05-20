@@ -18,13 +18,13 @@ class Play extends Phaser.Scene {
         this.load.image('background', 'background.jpeg');
         this.load.image('character', 'character.png');
         this.load.image('tower', 'tower.png');
+        this.load.image('l1enemy', 'enemy_l1.jpeg');
 
         //load the json images (These do not work)
         /*
         this.load.image('tiles', 'rockSheet.png');
         this.load.tilemapTiledJSON("tilemapJSON", "tileTest.json");
         */
-        this.load.image('l1enemy', 'enemy_l1.jpeg');
     }
 
     create() {
@@ -50,6 +50,19 @@ class Play extends Phaser.Scene {
         this.spawnL1Enemies();
         this.addColliders();
         this.addCamera();
+
+        /*
+        //add the tilemap format to the scene
+        const map = this.add.tilemap('tilemapJSON');
+        const tileset = map.addTilesetImage('tileset', 'tiles' );
+        const terrainLayer = map.createLayer('tiles', tileset, 0, 0);
+        const bgLayer = map.createLayer('background', tileset, 0, 0);
+        terrainLayer.setCollisionByProperty({
+            collides: true
+        });
+        this.player.body.setCollideWorldBounds(true);
+        this.physics.add.collider(this.player, terrainLayer);
+        */
     }
 
     addSounds() {
@@ -68,26 +81,6 @@ class Play extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
-
-        this.addBackground();
-        this.addInstructions();
-        this.makePlatforms();
-        this.addCharacter();
-        this.addColliders();
-        this.addCamera();
-
-        /*
-        //add the tilemap format to the scene
-        const map = this.add.tilemap('tilemapJSON');
-        const tileset = map.addTilesetImage('tileset', 'tiles' );
-        const terrainLayer = map.createLayer('tiles', tileset, 0, 0);
-        const bgLayer = map.createLayer('background', tileset, 0, 0);
-        terrainLayer.setCollisionByProperty({
-            collides: true
-        });
-        this.player.body.setCollideWorldBounds(true);
-        this.physics.add.collider(this.player, terrainLayer);
-        */
     }
 
     addBackground() {
@@ -95,9 +88,9 @@ class Play extends Phaser.Scene {
     }
 
     addInstructions() {
-        this.add.text(100, 700, 'Instructions: use right and left arrow keys to' +
+        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
             ' move and the up arrow key to jump. Use the spacebar to build ' + 
-            'towers to reach greater heights!', {fontFamily: 'Courier', fontSize: '15px', 
+            'towers to reach greater heights!', {fontFamily: 'Courier', fontSize: '20px', 
             color: '#fff', lineSpacing: 10, wordWrap: { width: width/3,},
         });
     }
@@ -221,7 +214,7 @@ class Play extends Phaser.Scene {
 
     //jump logic for player
     jumpingLogic() {
-        this.player.isGrounded = this.player.body.blocked.down;
+        this.player.isGrounded = this.player.body.touching.down;
         if (this.player.isGrounded) {
             this.jumps = this.MAX_JUMPS;
             this.jumping = false;
