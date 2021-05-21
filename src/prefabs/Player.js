@@ -11,8 +11,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.allowGravity=true;
         this.destroyed = false;
         this.setPushable(false);
-        this.setBounce(0.5);
+        this.setBounce(0.2);
         this.setDragY(200);
+        this.body.allowDrag=true;
         this.setDepth(1);
     }
 

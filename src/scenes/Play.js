@@ -16,6 +16,7 @@ class Play extends Phaser.Scene {
         this.load.image('character', 'character.png');
         this.load.image('tower', 'tower.png');
         this.load.image('l1enemy', 'enemy_l1.jpeg');
+        this.load.image('door', 'door.jpeg');
 
         //load the json images 
         this.load.image('tiles', 'rockSheet.png');
@@ -26,7 +27,7 @@ class Play extends Phaser.Scene {
     create() {
         //variables
         this.ACCELERATION = 1500;
-        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 5000;
         this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
@@ -37,13 +38,20 @@ class Play extends Phaser.Scene {
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
 
+        //DELETE this once we have real door
+        
+
         this.addSounds();
         this.addCharacter();
         this.addBackgroundTileMap();
+        this.door = this.physics.add.sprite(150, 100, 'door');
+        this.door.setScale(0.1);
         this.addInstructions();
         this.spawnL1Enemies();
         this.addColliders();
         this.addCamera();
+
+        
     }
 
     addBackgroundTileMap() {
@@ -90,6 +98,7 @@ class Play extends Phaser.Scene {
 
     addColliders() {
         if (!this.player.destroyed) {
+            this.physics.add.collider(this.door, this.terrainLayer);
             this.physics.add.collider(this.player, this.terrainLayer);
             this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
                 this.player.destroyed = true;
@@ -100,8 +109,17 @@ class Play extends Phaser.Scene {
                 //change scene to end game
                 this.scene.start('endScreen');
             });
-
             this.physics.add.collider(this.terrainLayer, this.l1EnemyGroup);
+            this.physics.add.collider(this.player, this.door, () => { 
+                this.player.destroyed = true;
+                this.player.destroy();
+                this.jumping_sound.destroy();
+                this.walking_sound.destroy();
+                console.log("player finished"); 
+                towerExists=false;  
+                this.scene.start('puzzle1Scene');
+            });
+            
         }
 
     }
