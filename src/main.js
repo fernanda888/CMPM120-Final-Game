@@ -7,6 +7,12 @@ const tileSize = 30;
 //main game object
 let config = {
     type: Phaser.CANVAS,
+    /*
+    //prevents edge bleedings
+    render: {
+        pixelArt: true
+    },
+    */
     width: 1500,
     height: 1000,
     scale: {
@@ -23,7 +29,7 @@ let config = {
         }
     },
     zoom: 1,
-    scene: [Play, Puzzle1, EndScene]
+    scene: [TitleScene, LevelScene, Play, EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
@@ -50,4 +56,3 @@ let towerExists=false;
 let playerWalking=false;
 let moveCam=false;
 let facingRight=true;
-let puzzleScene=false;
