@@ -29,7 +29,7 @@ let config = {
         }
     },
     zoom: 1,
-    scene: [TitleScene, LevelScene, Play, EndScene]
+    scene: [Play, EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
@@ -56,3 +56,4 @@ let towerExists=false;
 let playerWalking=false;
 let moveCam=false;
 let facingRight=true;
+let puzzle1Scene=false;

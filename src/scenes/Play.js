@@ -20,7 +20,7 @@ class Play extends Phaser.Scene {
 
         //load the json images 
         this.load.image('tiles', 'rockSheet.png');
-        this.load.tilemapTiledJSON("tilemapJSON", "tileTest.json");
+        this.load.tilemapTiledJSON("tilemapJSON", "levelOne.json");
 
     }
 
@@ -29,7 +29,7 @@ class Play extends Phaser.Scene {
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 5000;
-        this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
+        this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 2600;
@@ -42,24 +42,25 @@ class Play extends Phaser.Scene {
         
 
         this.addSounds();
-        this.addCharacter();
         this.addBackgroundTileMap();
+        this.addCharacter();
         this.door = this.physics.add.sprite(150, 100, 'door');
         this.door.setScale(0.1);
         this.addInstructions();
         this.spawnL1Enemies();
         this.addColliders();
         this.addCamera();
+        this.worldBounds();
 
         
     }
 
     addBackgroundTileMap() {
         //add the tilemap format to the scene
-        const map = this.add.tilemap('tilemapJSON');
-        const tileset = map.addTilesetImage('rockSheet', 'tiles');
-        const bgLayer = map.createLayer('background', tileset, 0, 0);
-        this.terrainLayer = map.createLayer('tiles', tileset, 0, 0);
+        this.map = this.add.tilemap('tilemapJSON');
+        const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
+        this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
+        this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
         this.terrainLayer.setCollisionByProperty({
             collides: true
         });
@@ -93,7 +94,8 @@ class Play extends Phaser.Scene {
     }
 
     addCharacter() {
-        this.player = new Player(this, this.MAX_X_VEL, this.MAX_Y_VEL);
+        const p1Spawn=this.map.findObject('Spawn',obj=>obj.name==='p1Spawn');
+        this.player = new Player(this, p1Spawn.x, p1Spawn.y);
     }
 
     addColliders() {
@@ -148,9 +150,12 @@ class Play extends Phaser.Scene {
     }
 
     addCamera() {
-        this.cameras.main.setBounds(0, 0, width, height);
-        this.cameras.main.startFollow(this.player, true);
-        this.cameras.main.setZoom(1.7);
+        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+        this.cameras.main.startFollow(this.player, true,0.25,0.25);
+        this.cameras.main.setZoom(1);
+    }
+    worldBounds(){
+        this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     }
 
     update() {
@@ -242,7 +247,6 @@ class Play extends Phaser.Scene {
     }
 
     buildTower() {
-
         if (!this.player.destroyed) {
             this.tower = new Tower(this, this.player);
             towerExists = true;

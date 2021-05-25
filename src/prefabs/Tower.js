@@ -1,7 +1,7 @@
 class Tower extends Phaser.Physics.Arcade.Sprite {
     constructor(scene,player) {
         // call Phaser Physics Sprite constructor
-        if(puzzleScene){
+        if(puzzle1Scene){
             super(scene, width/2, height/2, 'tower');
             scene.add.existing(this);               // add to existing scene, displayList, updateList
             scene.physics.add.existing(this);       // add to physics system
