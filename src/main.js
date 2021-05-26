@@ -30,7 +30,7 @@ let config = {
         }
     },
     zoom: 1,
-    scene: [Play, EndScene]
+    scene: [Puzzle1,EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
@@ -58,3 +58,6 @@ let playerWalking=false;
 let moveCam=false;
 let facingRight=true;
 let puzzle1Scene=false;
+let foundKey1=false;
+let foundKey2=false;
+let foundKey3=false;

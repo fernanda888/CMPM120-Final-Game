@@ -30,20 +30,34 @@ class Puzzle1 extends Phaser.Scene {
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
 
+        this.cameras.main.setBackgroundColor('#D0D0D0')
+
         //add background
-        this.pad=this.add.image(width/2, height/2, 'pad');
-        this.pad.setScale(0.7);
-        puzzleScene=true;
-        this.tower= new Tower (this, this.player);
-        this.tower.alpha=0;
+        // this.pad=this.add.image(width/2, height/2, 'pad');
+        // this.pad.setScale(0.7);
+        puzzle1Scene=true;
+        this.greenTower= new Tower (this, this.player);
+        this.greenTower.setScale(1.5);
+        this.greenTower.alpha=1;
+        this.greenTower.setTint(0xff0000);
+
+        this.purpleTower= new Tower (this, this.player);
+        this.purpleTower.setScale(1.5);
+        this.purpleTower.x=width/2 +450;
+        this.purpleTower.y=height/2;
+        this.purpleTower.alpha=.5;
+
+        this.blueTower= new Tower (this, this.player);
+        this.blueTower.setScale(1.5);
+        this.blueTower.x=width/2 -450;
+        this.blueTower.y=height/2;
+        this.blueTower.alpha=.5;
+        
+
         
     }
     update(){
-        if (towerExists && cursors.down.isDown ) {
-            this.tower.y+=this.ACCELERATION
-        } else if (cursors.up.isDown  && towerExists) {  //right arrow key down
-            this.tower.y-=this.ACCELERATION
-        } else if (this.spacebar.isDown) { //spacebar key down
+        if (this.spacebar.isDown) { //spacebar key down
             this.tower.alpha=1;
             towerExists=true;    
             this.tower_sound.play();
