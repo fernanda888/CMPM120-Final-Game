@@ -51,7 +51,6 @@ class Play extends Phaser.Scene {
 
         this.addSounds();
         this.addBackgroundTileMap();
-        this.addCharacter();
         const doorSpawn=this.map.findObject('Spawn',obj=>obj.name==='doorSpawn');
         this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'door');
         this.door.body.allowGravity = false;
@@ -72,6 +71,7 @@ class Play extends Phaser.Scene {
         const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
         this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
+        this.addCharacter();
         this.addKeys();
         // this.terrainLayer.setCollisionByProperty({
         //     collides: true
@@ -182,7 +182,7 @@ class Play extends Phaser.Scene {
         const key1Spawn=this.map.findObject('Spawn',obj=>obj.name==='key1Spawn');
         this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.05);
         this.key1.body.allowGravity=false;
-        this.physics.add.collider(this.key1, this.player, ()=> {
+        this.physics.add.overlap(this.key1, this.player, ()=> {
             foundKey1=true;
             this.key1.destroy();
         });
@@ -190,7 +190,7 @@ class Play extends Phaser.Scene {
         const key2Spawn=this.map.findObject('Spawn',obj=>obj.name==='key2Spawn');
         this.key2 = this.physics.add.sprite(key2Spawn.x, key2Spawn.y, 'greenKey').setScale(0.05);
         this.key2.body.allowGravity=false;
-        this.physics.add.collider(this.key2, this.player, ()=> {
+        this.physics.add.overlap(this.key2, this.player, ()=> {
             foundKey2=true;
             this.key2.destroy();
         });
@@ -198,7 +198,7 @@ class Play extends Phaser.Scene {
         const key3Spawn=this.map.findObject('Spawn',obj=>obj.name==='key3Spawn');
         this.key3 = this.physics.add.sprite(key3Spawn.x, key3Spawn.y, 'blueKey').setScale(0.05);
         this.key3.body.allowGravity=false;
-        this.physics.add.collider(this.key1, this.player, ()=> {
+        this.physics.add.overlap(this.key3, this.player, ()=> {
             foundKey3=true;
             this.key3.destroy();
         });

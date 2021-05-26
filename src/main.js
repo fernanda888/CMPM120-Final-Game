@@ -30,7 +30,7 @@ let config = {
         }
     },
     zoom: 1,
-    scene: [Puzzle1,EndScene]
+    scene: [Play, Puzzle1,EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
