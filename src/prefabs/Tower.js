@@ -1,8 +1,16 @@
 class Tower extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene,player) {
+    constructor(scene,player,color) {
         // call Phaser Physics Sprite constructor
         if(puzzle1Scene){
-            super(scene, width/2, height/2, 'tower');
+            if(color=="blue"){
+                super(scene, width/2, height/2, 'blueTower');
+            }
+            else if(color=="purple"){
+                super(scene, width/2, height/2, 'purpleTower');
+            }
+            else if (color=="green"){
+                super(scene, width/2, height/2, 'greenTower');
+            }
             scene.add.existing(this);               // add to existing scene, displayList, updateList
             scene.physics.add.existing(this);       // add to physics system
             this.setCollideWorldBounds(true); 

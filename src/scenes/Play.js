@@ -45,16 +45,12 @@ class Play extends Phaser.Scene {
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
-
-        //DELETE this once we have real door
         
 
         this.addSounds();
         this.addBackgroundTileMap();
-        const doorSpawn=this.map.findObject('Spawn',obj=>obj.name==='doorSpawn');
-        this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'door');
-        this.door.body.allowGravity = false;
-        this.door.setScale(0.1);
+        this.addCrackedTiles();
+        this.addDoor();
         this.addInstructions();
         this.spawnL1Enemies();
         this.addColliders();
@@ -73,18 +69,26 @@ class Play extends Phaser.Scene {
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
         this.addCharacter();
         this.addKeys();
-        // this.terrainLayer.setCollisionByProperty({
-        //     collides: true
-        // });
-        this.terrainTiles=this.map.createFromTiles([1,2,3,4,6,7,8,9,11,12,13,14,15],10,{
+    }
+    addCrackedTiles(){
+        this.keyTiles=this.map.createFromTiles([5],10,{
             key:"rock"
         });
-        this.keyTiles=this.map.createFromTiles([5],10,{
-            key:"keyRock"
+        this.keyTiles.forEach(function(element){
+            element.x+=25;
+            element.y+=25
         });
-        this.terrainGroup=this.add.group(this.terrainTiles);
-        this.terrainGroup.addMultiple(this.keyTiles);
+        this.terrainGroup=this.add.group(this.keyTiles);
         this.physics.world.enable(this.terrainGroup,Phaser.Physics.Arcade.STATIC_BODY);
+        this.terrainLayer.setCollisionByProperty({
+            collides: true
+        });
+    }
+    addDoor(){
+        const doorSpawn=this.map.findObject('Spawn',obj=>obj.name==='doorSpawn');
+        this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'door');
+        this.door.body.allowGravity = false;
+        this.door.setScale(0.1);
     }
 
     addSounds() {
@@ -119,10 +123,48 @@ class Play extends Phaser.Scene {
         this.player = new Player(this, p1Spawn.x, p1Spawn.y);
     }
 
+    addKeys(){
+        this.topkey1=this.add.image(width/2-50, height/4, 'purpleKey').setScale(0.09).setScrollFactor(0);
+        this.topkey1.alpha=.5;
+        this.topkey2=this.add.image(width/2, height/4, 'greenKey').setScale(0.09).setScrollFactor(0);
+        this.topkey2.alpha=.5;
+        this.topkey3=this.add.image(width/2+50, height/4, 'blueKey').setScale(0.09).setScrollFactor(0);
+        this.topkey3.alpha=.5;
+
+        const key1Spawn=this.map.findObject('Spawn',obj=>obj.name==='key1Spawn');
+        this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.05);
+        this.key1.body.allowGravity=false;
+        this.physics.add.overlap(this.key1, this.player, ()=> {
+            foundKey1=true;
+            this.topkey1.alpha=1;
+            this.key1.destroy();
+        });
+
+        const key2Spawn=this.map.findObject('Spawn',obj=>obj.name==='key2Spawn');
+        this.key2 = this.physics.add.sprite(key2Spawn.x, key2Spawn.y, 'greenKey').setScale(0.05);
+        this.key2.body.allowGravity=false;
+        this.physics.add.overlap(this.key2, this.player, ()=> {
+            foundKey2=true;
+            this.topkey2.alpha=1;
+            this.key2.destroy();
+        });
+
+        const key3Spawn=this.map.findObject('Spawn',obj=>obj.name==='key3Spawn');
+        this.key3 = this.physics.add.sprite(key3Spawn.x, key3Spawn.y, 'blueKey').setScale(0.05);
+        this.key3.body.allowGravity=false;
+        this.physics.add.overlap(this.key3, this.player, ()=> {
+            foundKey3=true;
+            this.topkey3.alpha=1;
+            this.key3.destroy();
+        });
+    }
+
     addColliders() {
         if (!this.player.destroyed) {
-            this.physics.add.collider(this.door, this.terrainGroup);
-            this.physics.add.collider(this.player, this.terrainGroup);
+            this.physics.add.collider(this.door, this.terrainLayer);
+            this.physics.add.collider(this.player, this.terrainLayer);
+            this.physics.add.collider(this.player, this.terrainGroup );
+            this.physics.add.collider(this.l1EnemyGroup, this.terrainGroup);
             this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
@@ -132,7 +174,7 @@ class Play extends Phaser.Scene {
                 //change scene to end game
                 this.scene.start('endScreen');
             });
-            this.physics.add.collider(this.terrainGroup, this.l1EnemyGroup);
+            this.physics.add.collider(this.terrainLayer, this.l1EnemyGroup);
             this.physics.add.collider(this.player, this.door, () => { 
                 this.player.destroyed = true;
                 this.player.destroy();
@@ -171,38 +213,14 @@ class Play extends Phaser.Scene {
     }
 
     addCamera() {
-        this.cameras.main.setBounds(-25, -25, this.map.widthInPixels, this.map.heightInPixels);
-        this.cameras.main.startFollow(this.player, true,0.25,0.25);
-        this.cameras.main.setZoom(1);
+        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+        this.cameras.main.startFollow(this.player, true,0.25,0.25,-75);
+        this.cameras.main.setZoom(1.7);
     }
     worldBounds(){
         this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     }
-    addKeys(){
-        const key1Spawn=this.map.findObject('Spawn',obj=>obj.name==='key1Spawn');
-        this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.05);
-        this.key1.body.allowGravity=false;
-        this.physics.add.overlap(this.key1, this.player, ()=> {
-            foundKey1=true;
-            this.key1.destroy();
-        });
-
-        const key2Spawn=this.map.findObject('Spawn',obj=>obj.name==='key2Spawn');
-        this.key2 = this.physics.add.sprite(key2Spawn.x, key2Spawn.y, 'greenKey').setScale(0.05);
-        this.key2.body.allowGravity=false;
-        this.physics.add.overlap(this.key2, this.player, ()=> {
-            foundKey2=true;
-            this.key2.destroy();
-        });
-
-        const key3Spawn=this.map.findObject('Spawn',obj=>obj.name==='key3Spawn');
-        this.key3 = this.physics.add.sprite(key3Spawn.x, key3Spawn.y, 'blueKey').setScale(0.05);
-        this.key3.body.allowGravity=false;
-        this.physics.add.overlap(this.key3, this.player, ()=> {
-            foundKey3=true;
-            this.key3.destroy();
-        });
-    }
+    
 
     update() {
         this.playSounds();
@@ -225,7 +243,11 @@ class Play extends Phaser.Scene {
                 playerWalking = true;
                 this.player.resetFlip();
                 facingRight = true;
-            } else if (this.spacebar.isDown) {    //spacebar key down
+            } else if (cursors.down.isDown) {  //right arrow key down
+                if(towerExists){
+                    this.tower.destroy();
+                }
+            }else if (this.spacebar.isDown) {    //spacebar key down
                 this.tower_sound.play();
                 if (towerExists == true) {
                     this.tower.destroy();
@@ -294,9 +316,10 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
-            this.tower = new Tower(this, this.player);
+            this.tower = new Tower(this, this.player,"red");
             towerExists = true;
             this.physics.add.collider(this.tower, this.player);
+            this.physics.add.collider(this.tower,this.terrainLayer);
             this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
                 enemy.destroy();
             });
