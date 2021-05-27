@@ -215,7 +215,7 @@ class Play extends Phaser.Scene {
     addCamera() {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
         this.cameras.main.startFollow(this.player, true,0.25,0.25,-75);
-        this.cameras.main.setZoom(1.7);
+        this.cameras.main.setZoom(1.5);
     }
     worldBounds(){
         this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
