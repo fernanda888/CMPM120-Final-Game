@@ -45,8 +45,8 @@ class Play extends Phaser.Scene {
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
-        
 
+        //DELETE this once we have real door
         this.addSounds();
         this.addBackgroundTileMap();
         this.addCrackedTiles();
@@ -56,8 +56,6 @@ class Play extends Phaser.Scene {
         this.addColliders();
         this.addCamera();
         this.worldBounds();
-        
-
         
     }
 
@@ -119,8 +117,8 @@ class Play extends Phaser.Scene {
     }
 
     addCharacter() {
-        const p1Spawn=this.map.findObject('Spawn',obj=>obj.name==='p1Spawn');
-        this.player = new Player(this, p1Spawn.x, p1Spawn.y);
+        this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
+        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y - 1800);
     }
 
     addKeys(){
@@ -192,7 +190,6 @@ class Play extends Phaser.Scene {
     spawnL1Enemies() {
         //set up L1 enemy group
         this.l1EnemyGroup = this.add.group({
-            runChildUpdate: true    // make sure update runs on group children
         });
 
         //wait before spawning
@@ -203,11 +200,13 @@ class Play extends Phaser.Scene {
     addL1Enemy() {
         let speedVariance = Phaser.Math.Between(10, 13);
         if (!this.jumping) {
-            this.time.delayedCall(3000, () => {
-                console.log("adding level 1 enemy:");
-                let enemy = new L1Enemy(this, -100 - speedVariance, this.player);
-                this.l1EnemyGroup.add(enemy);
-            });
+            console.log("adding level 1 enemy:");
+            let enemy1 = new L1Enemy(this, -100 - speedVariance, width/2, this.p1Spawn.y - 50);
+            this.l1EnemyGroup.add(enemy1);
+            let enemy2 = new L1Enemy(this, -100 - speedVariance, width - 50, this.p1Spawn.y - 500);
+            this.l1EnemyGroup.add(enemy2);
+            let enemy3 = new L1Enemy(this, -100 - speedVariance, width/2, this.p1Spawn.y - 1600);
+            this.l1EnemyGroup.add(enemy3);
         }
 
     }
