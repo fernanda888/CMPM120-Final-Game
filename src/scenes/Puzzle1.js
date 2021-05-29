@@ -134,15 +134,25 @@ class Puzzle1 extends Phaser.Scene {
             
         else if (this.spacebar.isDown) { //spacebar key down
             if(this.purpleKey){
+                this.tower_sound.play();
                 this.purpleTower.alpha=1;
+                this.purpleDone=true;
             }
             else if(this.greenKey){
+                this.tower_sound.play();
                 this.greenTower.alpha=1;
+                this.greenDone=true;
             }
             else if(this.blueKey){
+                this.tower_sound.play();
                 this.blueTower.alpha=1
+                this.blueDone=true;
             }
             
-        } 
+        }
+        
+        if(this.purpleDone && this.greenDone && this.blueDone ){
+            this.scene.start('levelScene');
+        }
     }
 }
