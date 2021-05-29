@@ -5,10 +5,9 @@ class L1Enemy extends Phaser.Physics.Arcade.Sprite {
         // set up physics sprite
         scene.physics.add.existing(this);  
         scene.add.existing(this);               // add to existing scene, displayList, updateList
-        this.setScale(0.15);
+        this.setScale(0.4);
         // add to physics system
         this.setVelocityX(velocity);            // make it go!
-        this.setFlip(true, false);
         this.setCollideWorldBounds(true); 
         this.body.allowGravity=true;
         this.setPushable(false);
