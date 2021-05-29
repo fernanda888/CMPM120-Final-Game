@@ -22,6 +22,7 @@ class Play extends Phaser.Scene {
         this.load.image('purpleKey', 'purpleKey.png');
         this.load.image('greenKey', 'greenKey.png');
         this.load.image('blueKey', 'blueKey.png');
+        this.load.image('powerUp', 'powerUp.png');
 
         //load the json images 
         this.load.image('tiles', 'rockSheet.png');
@@ -36,6 +37,7 @@ class Play extends Phaser.Scene {
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
+        this.MAX_TOW=1;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 2600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
@@ -49,6 +51,8 @@ class Play extends Phaser.Scene {
         //DELETE this once we have real door
         this.addSounds();
         this.addBackgroundTileMap();
+        this.addCharacter();
+        this.addSprites();
         this.addCrackedTiles();
         this.addDoor();
         this.addInstructions();
@@ -65,8 +69,7 @@ class Play extends Phaser.Scene {
         const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
         this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
-        this.addCharacter();
-        this.addKeys();
+        
     }
     addCrackedTiles(){
         this.keyTiles=this.map.createFromTiles([5],10,{
@@ -118,10 +121,10 @@ class Play extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y - 1800);
+        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
     }
 
-    addKeys(){
+    addSprites(){
         this.topkey1=this.add.image(width/2-50, height/4, 'purpleKey').setScale(0.09).setScrollFactor(0);
         this.topkey1.alpha=.5;
         this.topkey2=this.add.image(width/2, height/4, 'greenKey').setScale(0.09).setScrollFactor(0);
@@ -154,6 +157,19 @@ class Play extends Phaser.Scene {
             foundKey3=true;
             this.topkey3.alpha=1;
             this.key3.destroy();
+        });
+
+        //add towers group
+        this.towers = this.add.group({
+        });
+
+        //add powerUP
+        const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
+        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+        this.powerUp.body.allowGravity=false;
+        this.physics.add.overlap(this.powerUp, this.player, ()=> {
+            this.powerUp.destroy();
+            this.MAX_TOW=2;
         });
     }
 
@@ -225,6 +241,7 @@ class Play extends Phaser.Scene {
         this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
+        this.buildTower();
         this.cameraMovement();
     }
 
@@ -244,15 +261,10 @@ class Play extends Phaser.Scene {
                 facingRight = true;
             } else if (cursors.down.isDown) {  //right arrow key down
                 if(towerExists){
-                    this.tower.destroy();
+                    this.towers.clear(true,true);
+                    this.towersLeft=this.MAX_TOW;
                 }
-            }else if (this.spacebar.isDown) {    //spacebar key down
-                this.tower_sound.play();
-                if (towerExists == true) {
-                    this.tower.destroy();
-                }
-                this.buildTower();
-            } else {
+            }else {
                 //set acceleration to 0 so drag will take over
                 this.player.body.setAccelerationX(0);
                 this.walking_sound.stop();
@@ -283,7 +295,7 @@ class Play extends Phaser.Scene {
     
             // allow steady velocity change up to a certain key down duration
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
+            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 200)) {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
                 this.jumping_sound.play();
@@ -315,17 +327,36 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
-            this.tower = new Tower(this, this.player,"red");
-            towerExists = true;
-            this.physics.add.collider(this.tower, this.player);
-            this.physics.add.collider(this.tower,this.terrainLayer);
-            this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
-                enemy.destroy();
-            });
-            this.physics.add.overlap(this.tower,this.terrainGroup, (obj1,obj2)=>{
-                obj2.destroy();
-            });
-        }
+            if(!towerExists){
+                this.towersLeft=this.MAX_TOW;
+                this.building=false;
+            }
 
+            if(this.spacebar.isDown && !playerWalking && this.player.isGrounded){
+                console.log(this.towersLeft);
+                if (this.towersLeft<=0) {
+                    this.towers.clear(true,true);
+                    this.towersLeft=this.MAX_TOW;
+                }
+                let tower = new Tower(this, this.player,"red");
+                this.towers.add(tower);
+                towerExists = true;
+                this.physics.add.collider(this.towers, this.player);
+                this.physics.add.collider(this.towers,this.terrainLayer);
+                this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy) => {
+                    enemy.destroy();
+                });
+                this.physics.add.overlap(this.towers,this.terrainGroup, (obj1,obj2)=>{
+                    obj2.destroy();
+                });
+                this.tower_sound.play();
+                this.building=true;
+            }
+            if(this.building  && Phaser.Input.Keyboard.UpDuration(this.spacebar)){
+                this.towersLeft--;
+                this.building=false;
+            }
+
+        }
     }
 }

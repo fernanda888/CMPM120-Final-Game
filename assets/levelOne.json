@@ -90,7 +90,19 @@
                  "width":0,
                  "x":1478.11632004186,
                  "y":3663.0980669145
-                }],
+                },
+                {
+                     "height":0,
+                     "id":8,
+                     "name":"powerUp",
+                     "point":true,
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":471.630356715346,
+                     "y":3945.41536988269
+                    }],
          "opacity":1,
          "properties":[
                 {
