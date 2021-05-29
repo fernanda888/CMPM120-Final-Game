@@ -24,8 +24,8 @@ class Play extends Phaser.Scene {
         this.load.image('blueKey', 'blueKey.png');
 
         //load the json images 
-        this.load.image('tiles', 'rockSheet.png');
-        this.load.tilemapTiledJSON("tilemapJSON", "levelOne.json");
+        this.load.image('tiles', 'rockSheetNew.png');
+        this.load.tilemapTiledJSON("tilemapJSON", "levelOneNew.json");
 
     }
 
