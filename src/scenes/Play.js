@@ -22,7 +22,6 @@ class Play extends Phaser.Scene {
         this.load.image('purpleKey', 'purpleKey.png');
         this.load.image('greenKey', 'greenKey.png');
         this.load.image('blueKey', 'blueKey.png');
-        this.load.image('powerUp', 'powerUp.png');
 
         //load the json images 
         this.load.image('tiles', 'rockSheet.png');
@@ -37,7 +36,6 @@ class Play extends Phaser.Scene {
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
-        this.MAX_TOW=1;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
@@ -51,7 +49,6 @@ class Play extends Phaser.Scene {
         //DELETE this once we have real door
         this.addSounds();
         this.addBackgroundTileMap();
-        this.addCharacter();
         this.addSprites();
         this.addCrackedTiles();
         this.addDoor();
@@ -103,7 +100,8 @@ class Play extends Phaser.Scene {
         const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
         this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
-        
+        this.addCharacter();
+        //this.addKeys();
     }
     addCrackedTiles() {
         this.keyTiles = this.map.createFromTiles([5], 10, {
@@ -119,6 +117,7 @@ class Play extends Phaser.Scene {
             collides: true
         });
     }
+
     addDoor() {
         const doorSpawn = this.map.findObject('Spawn', obj => obj.name === 'doorSpawn');
         this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'door');
@@ -157,7 +156,6 @@ class Play extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-<<<<<<< HEAD
 
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y - 1800);
 
@@ -195,8 +193,36 @@ class Play extends Phaser.Scene {
         this.physics.add.overlap(this.key3, this.player, () => {
             foundKey3 = true;
             this.topkey3.alpha = 1;
-=======
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+            this.key3.destroy();
+        });
+    }
+
+    changeEnemyDirection(enemy) {
+        //check if blocked on the right, then enemy should move left
+        if (enemy.body.blocked.right) {
+            enemy.direction = 'LEFT';
+            enemy.flipX = true;
+            if (enemy.name === 'enemy5') {
+                console.log("flipping enemy blocked right: ", enemy.flipX);
+            }
+            
+        }
+
+        //check if blocked on the left, then enemy should move right
+        else if (enemy.body.blocked.left) {
+            enemy.direction = 'RIGHT';
+            enemy.flipX = true;
+            if (enemy.name === 'enemy5') {
+                console.log("flipping enemy blocked left: ", enemy.flipX);
+            }   
+        }
+
+        // console.log(enemy);
+        if (enemy.direction === 'RIGHT') {
+            enemy.body.velocity.x = 100;
+        } else {
+            enemy.body.velocity.x = -100;
+        }
     }
 
     addSprites(){
@@ -231,12 +257,7 @@ class Play extends Phaser.Scene {
         this.physics.add.overlap(this.key3, this.player, ()=> {
             foundKey3=true;
             this.topkey3.alpha=1;
->>>>>>> 52ecda4c1d62bb398bf412a1b6f228922144e319
             this.key3.destroy();
-        });
-
-        //add towers group
-        this.towers = this.add.group({
         });
 
         //add powerUP
@@ -247,34 +268,6 @@ class Play extends Phaser.Scene {
             this.powerUp.destroy();
             this.MAX_TOW=2;
         });
-    }
-
-    changeEnemyDirection(enemy) {
-        //check if blocked on the right, then enemy should move left
-        if (enemy.body.blocked.right) {
-            enemy.direction = 'LEFT';
-            enemy.flipX = true;
-            if (enemy.name === 'enemy5') {
-                console.log("flipping enemy blocked right: ", enemy.flipX);
-            }
-            
-        }
-
-        //check if blocked on the left, then enemy should move right
-        else if (enemy.body.blocked.left) {
-            enemy.direction = 'RIGHT';
-            enemy.flipX = true;
-            if (enemy.name === 'enemy5') {
-                console.log("flipping enemy blocked left: ", enemy.flipX);
-            }   
-        } 
-
-        // console.log(enemy);
-        if (enemy.direction === 'RIGHT') {
-            enemy.body.velocity.x = 100;
-        } else {
-            enemy.body.velocity.x = -100;
-        }
     }
 
     addColliders() {
@@ -378,7 +371,6 @@ class Play extends Phaser.Scene {
         this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
-        this.buildTower();
         this.cameraMovement();
 
     }
@@ -398,16 +390,7 @@ class Play extends Phaser.Scene {
                 playerWalking = true;
                 this.player.resetFlip();
                 facingRight = true;
-<<<<<<< HEAD
             }  else if (!this.spacebar.isDown && !cursors.down.isDown){
-=======
-            } else if (cursors.down.isDown) {  //right arrow key down
-                if(towerExists){
-                    this.towers.clear(true,true);
-                    this.towersLeft=this.MAX_TOW;
-                }
-            }else {
->>>>>>> 52ecda4c1d62bb398bf412a1b6f228922144e319
                 //set acceleration to 0 so drag will take over
                 this.player.body.setAccelerationX(0);
                 this.walking_sound.stop();
@@ -451,7 +434,7 @@ class Play extends Phaser.Scene {
 
             // allow steady velocity change up to a certain key down duration
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 200)) {
+            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
                 this.jumping_sound.play();
@@ -483,7 +466,6 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
-<<<<<<< HEAD
             this.tower = new Tower(this, this.player, "red");
             towerExists = true;
             this.physics.add.collider(this.tower, this.player);
@@ -495,38 +477,8 @@ class Play extends Phaser.Scene {
                 obj2.destroy();
             });
         }
-=======
-            if(!towerExists){
-                this.towersLeft=this.MAX_TOW;
-                this.building=false;
-            }
->>>>>>> 52ecda4c1d62bb398bf412a1b6f228922144e319
 
-            if(this.spacebar.isDown && !playerWalking && this.player.isGrounded){
-                console.log(this.towersLeft);
-                if (this.towersLeft<=0) {
-                    this.towers.clear(true,true);
-                    this.towersLeft=this.MAX_TOW;
-                }
-                let tower = new Tower(this, this.player,"red");
-                this.towers.add(tower);
-                towerExists = true;
-                this.physics.add.collider(this.towers, this.player);
-                this.physics.add.collider(this.towers,this.terrainLayer);
-                this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy) => {
-                    enemy.destroy();
-                });
-                this.physics.add.overlap(this.towers,this.terrainGroup, (obj1,obj2)=>{
-                    obj2.destroy();
-                });
-                this.tower_sound.play();
-                this.building=true;
-            }
-            if(this.building  && Phaser.Input.Keyboard.UpDuration(this.spacebar)){
-                this.towersLeft--;
-                this.building=false;
-            }
-
-        }
     }
+
+    
 }
