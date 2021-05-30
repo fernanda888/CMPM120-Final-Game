@@ -35,7 +35,7 @@ class Tower extends Phaser.Physics.Arcade.Sprite {
             this.setBounce(0);
             this.setDragY(0);
             this.body.immovable = true;
-            this.body.allowGravity = false;
+            this.body.allowGravity = true;
     }
 }
 

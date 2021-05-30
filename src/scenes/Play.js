@@ -17,11 +17,11 @@ class Play extends Phaser.Scene {
         this.load.image('tower', 'tower.png');
         this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
         this.load.image('door', 'door.jpeg');
-        this.load.image('rock', 'rock2.png');
-        this.load.image('keyRock', 'rock1.png');
+        this.load.image('rock', 'rock1.png');
         this.load.image('purpleKey', 'purpleKey.png');
         this.load.image('greenKey', 'greenKey.png');
         this.load.image('blueKey', 'blueKey.png');
+        this.load.image('powerUp', 'powerUp.png');
 
         //load the json images 
         this.load.image('tiles', 'rockSheetNew.png');
@@ -35,13 +35,15 @@ class Play extends Phaser.Scene {
         this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
-        this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
+        this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
+        this.MAX_TOW=1;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
         this.foundKey1 = false;
         this.foundKey2 = false;
         this.foundKey3 = false;
+        this.currentTowers=0;
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
@@ -49,8 +51,9 @@ class Play extends Phaser.Scene {
         //DELETE this once we have real door
         this.addSounds();
         this.addBackgroundTileMap();
-        this.addSprites();
         this.addCrackedTiles();
+        this.addCharacter();
+        this.addSprites();
         this.addDoor();
         this.addInstructions();
         this.addBlocks();
@@ -104,11 +107,10 @@ class Play extends Phaser.Scene {
         const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
         this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
-        this.addCharacter();
         //this.addKeys();
     }
     addCrackedTiles() {
-        this.keyTiles = this.map.createFromTiles([5], 10, {
+        this.keyTiles = this.map.createFromTiles([16], 10, {
             key: "rock"
         });
         this.keyTiles.forEach(function (element) {
@@ -163,42 +165,6 @@ class Play extends Phaser.Scene {
 
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
 
-    }
-
-    addKeys() {
-        this.topkey1 = this.add.image(width / 2 - 50, height / 4, 'purpleKey').setScale(0.09).setScrollFactor(0);
-        this.topkey1.alpha = .5;
-        this.topkey2 = this.add.image(width / 2, height / 4, 'greenKey').setScale(0.09).setScrollFactor(0);
-        this.topkey2.alpha = .5;
-        this.topkey3 = this.add.image(width / 2 + 50, height / 4, 'blueKey').setScale(0.09).setScrollFactor(0);
-        this.topkey3.alpha = .5;
-
-        const key1Spawn = this.map.findObject('Spawn', obj => obj.name === 'key1Spawn');
-        this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.05);
-        this.key1.body.allowGravity = false;
-        this.physics.add.overlap(this.key1, this.player, () => {
-            foundKey1 = true;
-            this.topkey1.alpha = 1;
-            this.key1.destroy();
-        });
-
-        const key2Spawn = this.map.findObject('Spawn', obj => obj.name === 'key2Spawn');
-        this.key2 = this.physics.add.sprite(key2Spawn.x, key2Spawn.y, 'greenKey').setScale(0.05);
-        this.key2.body.allowGravity = false;
-        this.physics.add.overlap(this.key2, this.player, () => {
-            foundKey2 = true;
-            this.topkey2.alpha = 1;
-            this.key2.destroy();
-        });
-
-        const key3Spawn = this.map.findObject('Spawn', obj => obj.name === 'key3Spawn');
-        this.key3 = this.physics.add.sprite(key3Spawn.x, key3Spawn.y, 'blueKey').setScale(0.05);
-        this.key3.body.allowGravity = false;
-        this.physics.add.overlap(this.key3, this.player, () => {
-            foundKey3 = true;
-            this.topkey3.alpha = 1;
-            this.key3.destroy();
-        });
     }
 
     changeEnemyDirection(enemy) {
@@ -263,15 +229,19 @@ class Play extends Phaser.Scene {
             this.topkey3.alpha=1;
             this.key3.destroy();
         });
-
-        //add powerUP
-        const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
-        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
-        this.powerUp.body.allowGravity=false;
-        this.physics.add.overlap(this.powerUp, this.player, ()=> {
-            this.powerUp.destroy();
-            this.MAX_TOW=2;
+        //add towers group
+        this.towers = this.add.group({
         });
+
+        this.towerExists=this.MAX_TOW;
+         //add powerUP
+         const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
+         this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+         this.powerUp.body.allowGravity=false;
+         this.physics.add.overlap(this.powerUp, this.player, ()=> {
+             this.powerUp.destroy();
+             this.MAX_TOW=2;
+         });
     }
 
     addColliders() {
@@ -367,7 +337,7 @@ class Play extends Phaser.Scene {
 
     addCamera() {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-        this.cameras.main.startFollow(this.player, true, 0.25, 0.25, -75);
+        this.cameras.main.startFollow(this.player, true, 0.25, 0.25);
         this.cameras.main.setZoom(1.5);
     }
     worldBounds() {
@@ -387,7 +357,6 @@ class Play extends Phaser.Scene {
     keyDetection() {
         //left arrow key down
         if (!this.player.destroyed) {
-            console.log("player's position: ", this.player.x, ": ", this.player.y);
             if (cursors.left.isDown) {
                 this.player.body.setAccelerationX(-this.ACCELERATION);
                 playerWalking = true;
@@ -405,17 +374,17 @@ class Play extends Phaser.Scene {
                 playerWalking = false;
                 this.player.body.setDragX(this.DRAG);
             }
-            if (this.spacebar.isDown) {    //spacebar key down
-                this.tower_sound.play();
-                if (towerExists == true) {
-                    this.tower.destroy();
+            if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
+                if(this.currentTowers==this.MAX_TOW){
+                    this.towers.clear(true,true);
+                    this.currentTowers=0;
                 }
                 this.buildTower();
+                this.currentTowers++;
             }
             if (cursors.down.isDown) {  //right arrow key down
-                if (towerExists) {
-                    this.tower.destroy();
-                }
+                this.towers.clear(true,true);
+                this.currentTowers=0;
             }
         }
 
@@ -474,14 +443,15 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
-            this.tower = new Tower(this, this.player, "red");
-            towerExists = true;
-            this.physics.add.collider(this.tower, this.player);
-            this.physics.add.collider(this.tower, this.terrainLayer);
-            this.physics.add.overlap(this.l1EnemyGroup, this.tower, (enemy) => {
+            let tower = new Tower(this, this.player,"red");
+            this.towers.add(tower);
+            this.tower_sound.play();
+            this.physics.add.collider(this.towers, this.player);
+            this.physics.add.collider(this.towers, this.terrainLayer);
+            this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy) => {
                 enemy.destroy();
             });
-            this.physics.add.overlap(this.tower, this.terrainGroup, (obj1, obj2) => {
+            this.physics.add.overlap(this.towers, this.terrainGroup, (obj1, obj2) => {
                 console.log("destroying cracked tiles");
                 obj2.destroy();
             });

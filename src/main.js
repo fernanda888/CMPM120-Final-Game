@@ -30,7 +30,7 @@ let config = {
         }
     },
     zoom: 1,
-    scene: [TitleScene, LevelScene,Play,Puzzle1,EndScene]
+    scene: [TitleScene, LevelScene,Play, Puzzle1,EndScene]
   }
   //define game
 let game = new Phaser.Game(config);
@@ -53,7 +53,6 @@ let cont=false;
 let quit=false
 let playNow=false;
 let newHighScore = false;
-let towerExists=false;
 let playerWalking=false;
 let moveCam=false;
 let facingRight=true;
