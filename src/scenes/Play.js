@@ -73,14 +73,18 @@ class Play extends Phaser.Scene {
         this.border2 = this.addBlock(250, 3670);
         this.borderGroup.add(this.border2);
 
-        this.border3 = this.addBlock(850, 4070);
+        this.border3 = this.addBlock(509, 2720);
         this.borderGroup.add(this.border3);
 
-        this.border4 = this.addBlock(1050, 4320);
+        this.border6 = this.addBlock(953, 2720);
+        this.borderGroup.add(this.border6);
+
+        this.border4 = this.addBlock(995, 4470);
         this.borderGroup.add(this.border4);
 
-        // this.border5 = this.addBlock(267, 3670);
-        // this.borderGroup.push(this.border5);
+        this.border5 = this.addBlock(500, 4770);
+        this.borderGroup.add(this.border5);
+
     }
     addBlock(locX, locY) {
         //add border
@@ -157,7 +161,7 @@ class Play extends Phaser.Scene {
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
 
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y - 1800);
+        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
 
     }
 
@@ -332,7 +336,7 @@ class Play extends Phaser.Scene {
         let speedVariance = Phaser.Math.Between(10, 13);
         if (!this.jumping) {
             console.log("adding level 1 enemy:");
-            let enemy1 = new L1Enemy(this, -100 - speedVariance, 131, 4774);
+            let enemy1 = new L1Enemy(this, -100 - speedVariance, 630, 4770);
             enemy1.name = "enemy1";
             this.l1EnemyGroup.add(enemy1);
 
@@ -352,6 +356,10 @@ class Play extends Phaser.Scene {
             let enemy5 = new L1Enemy(this, -100 - speedVariance, 1375, 3020);
             enemy5.name = "enemy5";
             this.l1EnemyGroup.add(enemy5);
+
+            let enemy6 = new L1Enemy(this, -100 - speedVariance, 641, 2720);
+            enemy6.name = "enemy6";
+            this.l1EnemyGroup.add(enemy6);
 
         }
 
@@ -379,7 +387,7 @@ class Play extends Phaser.Scene {
     keyDetection() {
         //left arrow key down
         if (!this.player.destroyed) {
-            //console.log("player's position: ", this.player.x, ": ", this.player.y);
+            console.log("player's position: ", this.player.x, ": ", this.player.y);
             if (cursors.left.isDown) {
                 this.player.body.setAccelerationX(-this.ACCELERATION);
                 playerWalking = true;
@@ -474,6 +482,7 @@ class Play extends Phaser.Scene {
                 enemy.destroy();
             });
             this.physics.add.overlap(this.tower, this.terrainGroup, (obj1, obj2) => {
+                console.log("destroying cracked tiles");
                 obj2.destroy();
             });
         }
