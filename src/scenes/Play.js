@@ -191,7 +191,7 @@ class Play extends Phaser.Scene {
         //check if blocked on the right, then enemy should move left
         if (enemy.body.blocked.right) {
             enemy.direction = 'LEFT';
-            enemy.flipX = true;
+            enemy.resetFlip();
             if (enemy.name === 'enemy5') {
                 console.log("flipping enemy blocked right: ", enemy.flipX);
             }
