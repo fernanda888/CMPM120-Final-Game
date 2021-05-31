@@ -22,10 +22,17 @@ class Play extends Phaser.Scene {
         this.load.image('greenKey', 'greenKey.png');
         this.load.image('blueKey', 'blueKey.png');
         this.load.image('powerUp', 'powerUp.png');
+        this.load.spritesheet('charRun', 'characterRun.png', {
+            frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
+        });
+        this.load.spritesheet('charTower', 'characterTower.png', {
+            frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 5
+        });
 
         //load the json images 
         this.load.image('tiles', 'rockSheetNew.png');
         this.load.tilemapTiledJSON("tilemapJSON", "levelOneNew.json");
+
 
     }
 
@@ -53,6 +60,7 @@ class Play extends Phaser.Scene {
         this.addBackgroundTileMap();
         this.addCrackedTiles();
         this.addCharacter();
+        this.addAnimation();
         this.addSprites();
         this.addDoor();
         this.addInstructions();
@@ -99,6 +107,18 @@ class Play extends Phaser.Scene {
         border.body.checkCollision.left = true;
         border.body.checkCollision.right = true;
         return border;
+    }
+    addAnimation(){
+        this.anims.create({
+            key: 'run',
+            frames: this.anims.generateFrameNumbers('charRun', { start: 0, end: 7, first: 0 }),
+            frameRate: 12
+        });
+        this.anims.create({
+            key: 'build',
+            frames: this.anims.generateFrameNumbers('charTower', { start: 0, end: 5, first: 0 }),
+            frameRate: 12
+        });
     }
 
     addBackgroundTileMap() {
@@ -386,6 +406,10 @@ class Play extends Phaser.Scene {
                 this.towers.clear(true,true);
                 this.currentTowers=0;
             }
+            
+            if(playerWalking){
+                this.player.anims.play('run', true);
+            }
         }
 
     }
@@ -443,6 +467,7 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
+            this.player.anims.play('build');
             let tower = new Tower(this, this.player,"red");
             this.towers.add(tower);
             this.tower_sound.play();
