@@ -14,9 +14,10 @@ class Play extends Phaser.Scene {
 
         //load images
         this.load.image('character', 'character.png');
+        this.load.image('characterJump', 'characterJump.png');
         this.load.image('tower', 'tower.png');
         this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
-        this.load.image('door', 'door.jpeg');
+        this.load.image('chest', 'chest.png');
         this.load.image('rock', 'rock1.png');
         this.load.image('purpleKey', 'purpleKey.png');
         this.load.image('greenKey', 'greenKey.png');
@@ -146,7 +147,7 @@ class Play extends Phaser.Scene {
 
     addDoor() {
         const doorSpawn = this.map.findObject('Spawn', obj => obj.name === 'doorSpawn');
-        this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'door');
+        this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'chest');
         this.door.body.allowGravity = false;
         this.door.body.immovable = true;
         this.door.body.moves = false;
@@ -407,8 +408,10 @@ class Play extends Phaser.Scene {
                 this.currentTowers=0;
             }
             
-            if(playerWalking){
+            if(playerWalking && this.player.body.blocked.down){
                 this.player.anims.play('run', true);
+            } else if (!playerWalking && this.player.body.blocked.down){
+                this.player.setTexture('character');
             }
         }
 
@@ -439,6 +442,7 @@ class Play extends Phaser.Scene {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
                 this.jumping_sound.play();
+                this.player.setTexture('characterJump');
             }
             // finally, letting go of the UP key subtracts a jump
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
