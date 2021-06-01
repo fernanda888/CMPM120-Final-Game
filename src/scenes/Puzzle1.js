@@ -152,6 +152,7 @@ class Puzzle1 extends Phaser.Scene {
         }
         
         if(this.purpleDone && this.greenDone && this.blueDone ){
+            puzzle1Scene=false;
             this.scene.start('levelScene');
         }
     }
