@@ -35,6 +35,9 @@ class Load extends Phaser.Scene {
          this.load.image('greenKey', 'greenKey.png');
          this.load.image('blueKey', 'blueKey.png');
          this.load.image('powerUp', 'powerUp.png');
+         this.load.image('borderH', 'borderH.png');
+         this.load.image('keyFrame', 'keyFrame.png');
+         this.load.image('towerFrame', 'towerFrame.png');
          this.load.spritesheet('charRun', 'characterRun.png', {
              frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
          });

@@ -2,11 +2,6 @@ class Play extends Phaser.Scene {
     constructor() {
         super('playScene');
     }
-
-    
-        
-
-        //load level 2 map
         
 
     create() {
@@ -190,13 +185,18 @@ class Play extends Phaser.Scene {
     }
 
     addSprites(){
-        this.topkey1=this.add.image(width/2-50, height/4, 'purpleKey').setScale(0.15).setScrollFactor(0);
+        //add key and tower frames 
+        this.add.image(width/4, height/4.5, 'towerFrame').setScale(0.20).setScrollFactor(0);
+        this.add.image(width/1.3, height/4.55, 'keyFrame').setScale(0.20).setScrollFactor(0);
+        //add key and tower indicators 
+        this.topTower=this.add.image(width/4.03, height/4.5, 'tower').setScale(0.10).setScrollFactor(0);
+        this.topkey1=this.add.image(width/1.3-50, height/4.55, 'purpleKey').setScale(0.15).setScrollFactor(0);
         this.topkey1.alpha=.5;
-        this.topkey2=this.add.image(width/2, height/4, 'greenKey').setScale(0.15).setScrollFactor(0);
+        this.topkey2=this.add.image(width/1.3, height/4.55, 'greenKey').setScale(0.15).setScrollFactor(0);
         this.topkey2.alpha=.5;
-        this.topkey3=this.add.image(width/2+50, height/4, 'blueKey').setScale(0.15).setScrollFactor(0);
+        this.topkey3=this.add.image(width/1.3+50, height/4.55, 'blueKey').setScale(0.15).setScrollFactor(0);
         this.topkey3.alpha=.5;
-
+        //add key sprites
         const key1Spawn=this.map.findObject('Spawn',obj=>obj.name==='key1Spawn');
         this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.2);
         this.key1.body.allowGravity=false;
@@ -214,6 +214,7 @@ class Play extends Phaser.Scene {
             this.topkey2.alpha=1;
             this.key2.destroy();
         });
+        
 
         const key3Spawn=this.map.findObject('Spawn',obj=>obj.name==='key3Spawn');
         this.key3 = this.physics.add.sprite(key3Spawn.x, key3Spawn.y, 'blueKey').setScale(0.2);
@@ -229,15 +230,7 @@ class Play extends Phaser.Scene {
 
         this.towerExists=this.MAX_TOW;
          //add powerUP
-         const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
-         this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
-         this.powerUp.body.allowGravity=false;
-         this.physics.add.overlap(this.powerUp, this.player, ()=> {
-             this.powerUp.destroy();
-             this.MAX_TOW=2;
-         });
     }
-
     addColliders() {
         if (!this.player.destroyed) {
             this.physics.add.collider(this.door, this.terrainLayer);
@@ -375,11 +368,16 @@ class Play extends Phaser.Scene {
                 }
                 this.player.anims.play('build');
                 this.buildTower();
+                this.topTower.alpha=.5;
                 this.currentTowers++;
             }
             if (cursors.down.isDown) {  //right arrow key down
-                this.towers.clear(true,true);
-                this.currentTowers=0;
+                if(this.currentTowers>0){
+                    var destroyTow=this.towers.getFirstAlive();
+                    destroyTow.destroy();
+                    this.currentTowers--;
+                    this.topTower.alpha=1;
+                }
             }
             
             if(playerWalking && this.player.body.blocked.down){

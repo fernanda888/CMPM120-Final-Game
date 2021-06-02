@@ -45,22 +45,17 @@ class Puzzle1 extends Phaser.Scene {
 
         puzzle1Scene=true;
 
+        //set up towers
         this.purpleTower= new Tower (this, this.player,"purple");
-        this.purpleTower.setScale(1.5);
-        this.purpleTower.x=width/2 -450;
-        this.purpleTower.y=height/2;
-        this.purpleTower.alpha=.4;
+        this.towerSetUp(this.purpleTower,(width/2 -450),(height/2));
 
         this.greenTower= new Tower (this, this.player,"green");
-        this.greenTower.setScale(1.5);
-        this.greenTower.alpha=.4;
-        this.greenTower.setTint(0xff0000, 0x00ff00, 0x0000ff, 0xff0000);
+        this.towerSetUp(this.greenTower, (width/2), (height/2));
 
         this.blueTower= new Tower (this, this.player,"blue");
-        this.blueTower.setScale(1.5);
-        this.blueTower.x=width/2 +450;
-        this.blueTower.y=height/2;
-        this.blueTower.alpha=.4;
+        this.towerSetUp(this.blueTower, (width/2 +450),(height/2));
+
+        
 
         this.purpleKey=false;
         this.blueKey=false;
@@ -90,6 +85,12 @@ class Puzzle1 extends Phaser.Scene {
         
 
         
+    }
+    towerSetUp(tower,x,y){
+        tower.setScale(1.5);
+        tower.x=x;
+        tower.y=y;
+        tower.alpha=.4;     
     }
     update(){
         if (cursors.left.isDown) {

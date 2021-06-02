@@ -10,7 +10,7 @@ class Play2 extends Phaser.Scene {
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
-        this.MAX_TOW=2;
+        this.MAX_TOW=1;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
@@ -29,6 +29,7 @@ class Play2 extends Phaser.Scene {
         this.addCharacter();
         this.addAnimation();
         this.addSprites();
+        this.addBorder();
         this.addDoor();
         this.addInstructions();
         // this.addBlocks();
@@ -113,8 +114,8 @@ class Play2 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player.body.setSize(300, 600,25,50);
 
     }
     addCamera() {
@@ -126,13 +127,20 @@ class Play2 extends Phaser.Scene {
         this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     }
     addSprites(){
-        this.topkey1=this.add.image(width/2-50, height/4, 'purpleKey').setScale(0.15).setScrollFactor(0);
-        this.topkey1.alpha=.5;
-        this.topkey2=this.add.image(width/2, height/4, 'greenKey').setScale(0.15).setScrollFactor(0);
-        this.topkey2.alpha=.5;
-        this.topkey3=this.add.image(width/2+50, height/4, 'blueKey').setScale(0.15).setScrollFactor(0);
-        this.topkey3.alpha=.5;
 
+        //add key and tower frames 
+        this.add.image(width/4, height/4.5, 'towerFrame').setScale(0.20).setScrollFactor(0);
+        this.add.image(width/1.3, height/4.55, 'keyFrame').setScale(0.20).setScrollFactor(0);
+
+        //add key and tower indicators 
+        this.topTower=this.add.image(width/4.3, height/4.5, 'tower').setScale(0.10).setScrollFactor(0);
+        this.topkey1=this.add.image(width/1.3-50, height/4.55, 'purpleKey').setScale(0.15).setScrollFactor(0);
+        this.topkey1.alpha=.5;
+        this.topkey2=this.add.image(width/1.3, height/4.55, 'greenKey').setScale(0.15).setScrollFactor(0);
+        this.topkey2.alpha=.5;
+        this.topkey3=this.add.image(width/1.3+50, height/4.55, 'blueKey').setScale(0.15).setScrollFactor(0);
+        this.topkey3.alpha=.5;
+        //add key sprites
         const key1Spawn=this.map.findObject('Spawn',obj=>obj.name==='key1Spawn');
         this.key1 = this.physics.add.sprite(key1Spawn.x, key1Spawn.y, 'purpleKey').setScale(0.2);
         this.key1.body.allowGravity=false;
@@ -165,13 +173,29 @@ class Play2 extends Phaser.Scene {
 
         this.towerExists=this.MAX_TOW;
          //add powerUP
+         const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
+         this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+         this.powerUp.body.allowGravity=false;
+         this.physics.add.overlap(this.powerUp, this.player, ()=> {
+             this.powerUp.destroy();
+             this.MAX_TOW=2;
+             this.topTower2=this.add.image(width/3.8, height/4.5, 'tower').setScale(0.10).setScrollFactor(0);
+         });
+    }
+    addBorder(){ //adding border bc fall is too high
+        const key2Spawn=this.map.findObject('Spawn',obj=>obj.name==='key2Spawn');
+        this.borderH=this.physics.add.sprite(key2Spawn.x+100, key2Spawn.y+80, 'borderH').setScale(0.5);
+        this.borderH.setVisible(false);
+        this.borderH.setImmovable(true);
+        this.borderH.body.allowGravity = false;
+        this.borderH.body.checkCollision.up = true;
     }
     addColliders() {
         if (!this.player.destroyed) {
             this.physics.add.collider(this.door, this.terrainLayer);
             this.physics.add.collider(this.player, this.terrainLayer);
             this.physics.add.collider(this.player, this.terrainGroup);
-            
+            this.physics.add.collider(this.player, this.borderH);
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
@@ -217,12 +241,28 @@ class Play2 extends Phaser.Scene {
                     this.towers.clear(true,true);
                     this.currentTowers=0;
                 }
+                this.player.anims.play('build');
                 this.buildTower();
+                if(this.topTower.alpha==1){
+                    this.topTower.alpha=.5;
+                }
+                else if(this.MAX_TOW==2){
+                    this.topTower2.alpha=.5;
+                }
                 this.currentTowers++;
             }
-            if (cursors.down.isDown) {  //right arrow key down
-                this.towers.clear(true,true);
-                this.currentTowers=0;
+            if (Phaser.Input.Keyboard.JustDown(cursors.down)) {  //right arrow key down
+                if(this.currentTowers>0){
+                    var destroyTow=this.towers.getFirstAlive();
+                    destroyTow.destroy();
+                    this.currentTowers--;
+                    if(this.topTower.alpha==.5){
+                        this.topTower.alpha=1;
+                    }
+                    else if (this.MAX_TOW==2){
+                        this.topTower2.alpha=1;
+                    }
+                }
             }
             
             if(playerWalking && this.player.body.blocked.down){
