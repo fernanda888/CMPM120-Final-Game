@@ -31,11 +31,17 @@ class Tower extends Phaser.Physics.Arcade.Sprite {
             scene.add.existing(this);               // add to existing scene, displayList, updateList
             scene.physics.add.existing(this);       // add to physics system
             this.setCollideWorldBounds(true); 
+            this.setMaxVelocity(1, 100);
             this.setScale(0.2);
             this.setBounce(0);
             this.setDragY(0);
-            this.body.immovable = true;
+            this.body.pushable = false;
             this.body.allowGravity = true;
+            this.body.checkCollision.down=true;
+            this.body.checkCollision.left=true;
+            this.body.checkCollision.right=true;
+            this.body.checkCollision.up=true;
+            
     }
 }
 

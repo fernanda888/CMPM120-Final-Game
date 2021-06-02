@@ -16,11 +16,11 @@ class LevelScene extends Phaser.Scene {
         this.add.image(game.config.width, game.config.height, 'levelTower').setOrigin(1,1);
 
         //adds three level selections to the menu
-        var playButton3 = this.add.image(game.config.width/2 + 7.5,
+        this.playButton3 = this.add.image(game.config.width/2 + 7.5,
             game.config.height/3 + 36.5, 'button3');
-        var playButton2 = this.add.image(game.config.width/2 + 7.5,
+        this.playButton2 = this.add.image(game.config.width/2 + 7.5,
             game.config.height/2 + 132, 'button2');
-        var playButton1 = this.add.image(game.config.width/2 + 7.5,
+        this.playButton1 = this.add.image(game.config.width/2 + 7.5,
             game.config.height/1.5 + 236.5, 'button1');
 
         //foreground rocks
@@ -28,13 +28,10 @@ class LevelScene extends Phaser.Scene {
             game.config.height, 'fgMountains').setOrigin(0, 0);
             
         //makes all the buttons have the same visual property
-        this.buttonSetup(playButton1);
-        this.buttonSetup(playButton2);
-        this.buttonSetup(playButton3);
+        this.buttonSetup(this.playButton1);
+        this.buttonSetup(this.playButton2);
+        this.buttonSetup(this.playButton3);
 
-        playButton1.on('pointerdown', () => { 
-            this.clickButton();
-        });
     }
     buttonSetup(button){
         button.rotation = -0.8;
@@ -52,8 +49,12 @@ class LevelScene extends Phaser.Scene {
         this.bgClouds.tilePositionX -= scrollSpeed/8;
         this.fgClouds.tilePositionX -= scrollSpeed/4;
         this.bgMountains.tilePositionX += scrollSpeed/6;
-    }
-    clickButton() {
-        this.scene.start('playScene');
+
+        this.playButton1.on('pointerdown', () => { 
+            this.scene.start('playScene');
+        });
+        this.playButton2.on('pointerdown', () => { 
+            this.scene.start('play2Scene');
+        });
     }
 }

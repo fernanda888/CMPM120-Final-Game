@@ -1,40 +1,41 @@
-class Play extends Phaser.Scene {
+class Play2 extends Phaser.Scene {
     constructor() {
-        super('playScene');
+        super('play2Scene');
     }
 
     preload() {
         //set load path
         this.load.path = 'assets/';
+         //load sound
+         this.load.audio('jumping', 'jumping.mp3');
+         this.load.audio('walking', 'walking_sound.mp3');
+         this.load.audio('tower', 'tower.mp3');
+ 
+         //load images
+         this.load.image('character', 'character.png');
+         this.load.image('characterJump', 'characterJump.png');
+         this.load.image('tower', 'tower.png');
+         this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
+         this.load.image('chest', 'chest.png');
+         this.load.image('rock', 'rock1.png');
+         this.load.image('purpleKey', 'purpleKey.png');
+         this.load.image('greenKey', 'greenKey.png');
+         this.load.image('blueKey', 'blueKey.png');
+         this.load.image('powerUp', 'powerUp.png');
+         this.load.spritesheet('charRun', 'characterRun.png', {
+             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
+         });
+         this.load.spritesheet('charTower', 'characterTower.png', {
+             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 5
+         });
+ 
+         //load the json images 
 
-        //load sound
-        this.load.audio('jumping', 'jumping.mp3');
-        this.load.audio('walking', 'walking_sound.mp3');
-        this.load.audio('tower', 'tower.mp3');
-
-        //load images
-        this.load.image('character', 'character.png');
-        this.load.image('characterJump', 'characterJump.png');
-        this.load.image('tower', 'tower.png');
-        this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
-        this.load.image('chest', 'chest.png');
-        this.load.image('rock', 'rock1.png');
-        this.load.image('purpleKey', 'purpleKey.png');
-        this.load.image('greenKey', 'greenKey.png');
-        this.load.image('blueKey', 'blueKey.png');
-        this.load.image('powerUp', 'powerUp.png');
-
-        //load the json images 
-        this.load.image('tiles', 'rockSheetNew.png');
-        this.load.tilemapTiledJSON("tilemapJSON", "levelOneNew.json");
-
+        this.load.image('tiles2', 'levelTwoRocksheet.png');
+        this.load.tilemapTiledJSON("tilemap2JSON", "levelTwo.json");
         
-
-        //load level 2 map
-        
-
+ 
     }
-
     create() {
         //variables
         this.ACCELERATION = 1500;
@@ -42,7 +43,7 @@ class Play extends Phaser.Scene {
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
-        this.MAX_TOW=1;
+        this.MAX_TOW=2;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
@@ -63,49 +64,12 @@ class Play extends Phaser.Scene {
         this.addSprites();
         this.addDoor();
         this.addInstructions();
-        this.addBlocks();
-        this.spawnL1Enemies();
+        // this.addBlocks();
+        // this.spawnL1Enemies();
         this.addColliders();
         this.addCamera();
         this.worldBounds();
 
-    }
-
-    //add invisible sprites at each enemy positions
-    // so enemies don't fall off platform
-    addBlocks() {
-        this.borderGroup = this.add.group({
-        });
-
-        this.border1 = this.addBlock(350, 3018);
-        this.borderGroup.add(this.border1);
-
-        this.border2 = this.addBlock(250, 3670);
-        this.borderGroup.add(this.border2);
-
-        this.border3 = this.addBlock(509, 2720);
-        this.borderGroup.add(this.border3);
-
-        this.border6 = this.addBlock(953, 2720);
-        this.borderGroup.add(this.border6);
-
-        this.border4 = this.addBlock(995, 4470);
-        this.borderGroup.add(this.border4);
-
-        this.border5 = this.addBlock(500, 4770);
-        this.borderGroup.add(this.border5);
-
-    }
-    addBlock(locX, locY) {
-        //add border
-        let border = this.physics.add.sprite(locX,
-            locY, 'border').setOrigin(SCALE).setScale(0.1, 2);
-        border.setVisible(false);
-        border.setImmovable(true);
-        border.body.allowGravity = false;
-        border.body.checkCollision.left = true;
-        border.body.checkCollision.right = true;
-        return border;
     }
     addAnimation(){
         this.anims.create({
@@ -122,8 +86,8 @@ class Play extends Phaser.Scene {
 
     addBackgroundTileMap() {
         //add the tilemap format to the scene
-        this.map = this.add.tilemap('tilemapJSON');
-        const tileset = this.map.addTilesetImage('rockSheet', 'tiles');
+        this.map = this.add.tilemap('tilemap2JSON');
+        const tileset = this.map.addTilesetImage('levelTwoRocksheet', 'tiles2');
         this.bgLayer = this.map.createLayer('background', tileset, 0, 0);
         this.terrainLayer = this.map.createLayer('tiles', tileset, 0, 0);
         //this.addKeys();
@@ -137,6 +101,7 @@ class Play extends Phaser.Scene {
             element.y += 25
         });
         this.terrainGroup = this.add.group(this.keyTiles);
+        
         this.physics.world.enable(this.terrainGroup, Phaser.Physics.Arcade.STATIC_BODY);
         this.terrainLayer.setCollisionByProperty({
             collides: true
@@ -185,35 +150,14 @@ class Play extends Phaser.Scene {
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
 
     }
-
-    changeEnemyDirection(enemy) {
-        //check if blocked on the right, then enemy should move left
-        if (enemy.body.blocked.right) {
-            enemy.direction = 'LEFT';
-            enemy.resetFlip();
-            if (enemy.name === 'enemy5') {
-                console.log("flipping enemy blocked right: ", enemy.flipX);
-            }
-            
-        }
-
-        //check if blocked on the left, then enemy should move right
-        else if (enemy.body.blocked.left) {
-            enemy.direction = 'RIGHT';
-            enemy.flipX = true;
-            if (enemy.name === 'enemy5') {
-                console.log("flipping enemy blocked left: ", enemy.flipX);
-            }   
-        }
-
-        // console.log(enemy);
-        if (enemy.direction === 'RIGHT') {
-            enemy.body.velocity.x = 100;
-        } else {
-            enemy.body.velocity.x = -100;
-        }
+    addCamera() {
+        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+        this.cameras.main.startFollow(this.player, true, 0.25, 0.25);
+        this.cameras.main.setZoom(1.5);
     }
-
+    worldBounds() {
+        this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    }
     addSprites(){
         this.topkey1=this.add.image(width/2-50, height/4, 'purpleKey').setScale(0.15).setScrollFactor(0);
         this.topkey1.alpha=.5;
@@ -254,49 +198,13 @@ class Play extends Phaser.Scene {
 
         this.towerExists=this.MAX_TOW;
          //add powerUP
-         const PUspawn=this.map.findObject('Spawn',obj=>obj.name==='powerUp');
-         this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
-         this.powerUp.body.allowGravity=false;
-         this.physics.add.overlap(this.powerUp, this.player, ()=> {
-             this.powerUp.destroy();
-             this.MAX_TOW=2;
-         });
     }
-
     addColliders() {
         if (!this.player.destroyed) {
             this.physics.add.collider(this.door, this.terrainLayer);
             this.physics.add.collider(this.player, this.terrainLayer);
             this.physics.add.collider(this.player, this.terrainGroup);
-
-            this.physics.add.collider(this.door, this.l1EnemyGroup,
-                (enemy, border) => {
-                    this.changeEnemyDirection(enemy);
-                });
-            this.physics.add.collider(this.terrainLayer, this.l1EnemyGroup,
-                (enemy, border) => {
-                    this.changeEnemyDirection(enemy);
-                });
-            this.physics.add.collider(this.l1EnemyGroup, this.terrainGroup,
-                (enemy, border) => {
-                    //console.log("terrain group: ", enemy.name);
-                    this.changeEnemyDirection(enemy);
-                    
-                });
-            this.physics.add.collider(this.l1EnemyGroup, this.borderGroup,
-                (enemy, border) => {
-                    this.changeEnemyDirection(enemy);
-                });
-            this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
-                this.player.destroyed = true;
-                this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
-                console.log("player destroyed");
-                //change scene to end game
-                this.scene.start('endScreen');
-            });
-
+            
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
@@ -310,68 +218,12 @@ class Play extends Phaser.Scene {
         }
 
     }
-
-    spawnL1Enemies() {
-        //set up L1 enemy group
-        this.l1EnemyGroup = this.add.group({
-        });
-
-        //wait before spawning
-        console.log("adding enemies");
-        this.addL1Enemy();
-    }
-
-    addL1Enemy() {
-        let speedVariance = Phaser.Math.Between(10, 13);
-        if (!this.jumping) {
-            console.log("adding level 1 enemy:");
-            let enemy1 = new L1Enemy(this, -100 - speedVariance, 630, 4770);
-            enemy1.name = "enemy1";
-            this.l1EnemyGroup.add(enemy1);
-
-            let enemy2 = new L1Enemy(this, -100 - speedVariance, 1429, 4320);
-            enemy2.name = "enemy2";
-            this.l1EnemyGroup.add(enemy2);
-
-            let enemy3 = new L1Enemy(this, -100 - speedVariance, 816, 4070);
-            enemy3.name = "enemy3";
-            //console.log("enemy 3: ", enemy3);
-            this.l1EnemyGroup.add(enemy3);
-
-            let enemy4 = new L1Enemy(this, -100 - speedVariance, 1404, 3670);
-            enemy4.name = "enemy4";
-            this.l1EnemyGroup.add(enemy4);
-
-            let enemy5 = new L1Enemy(this, -100 - speedVariance, 1375, 3020);
-            enemy5.name = "enemy5";
-            this.l1EnemyGroup.add(enemy5);
-
-            let enemy6 = new L1Enemy(this, -100 - speedVariance, 641, 2720);
-            enemy6.name = "enemy6";
-            this.l1EnemyGroup.add(enemy6);
-
-        }
-
-    }
-
-    addCamera() {
-        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-        this.cameras.main.startFollow(this.player, true, 0.25, 0.25);
-        this.cameras.main.setZoom(1.5);
-    }
-    worldBounds() {
-        this.physics.world.bounds.setTo(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-    }
-
-
-    update() {
+    update(){
         this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
         this.cameraMovement();
-
     }
-
     //logic for keys pressed
     keyDetection() {
         //left arrow key down
@@ -473,18 +325,14 @@ class Play extends Phaser.Scene {
             let tower = new Tower(this, this.player,"red");
             this.towers.add(tower);
             this.tower_sound.play();
-            this.physics.add.collider(this.towers, this.player);
             this.physics.add.collider(this.towers, this.terrainLayer);
-            this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy) => {
-                enemy.destroy();
-            });
-            this.physics.add.overlap(this.towers, this.terrainGroup, (obj1, obj2) => {
+            this.physics.add.collider(this.towers, this.towers);
+            this.physics.add.collider(this.towers, this.player);
+            this.physics.add.collider(this.towers, this.terrainGroup, (obj1, obj2) => {
                 console.log("destroying cracked tiles");
                 obj2.destroy();
             });
         }
-
     }
 
-    
 }

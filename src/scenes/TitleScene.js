@@ -2,7 +2,6 @@ class TitleScene extends Phaser.Scene {
     constructor() {
         super('titleScene');
     }
-
     preload() {
         // set load path
         this.load.path = 'assets/';
@@ -25,7 +24,7 @@ class TitleScene extends Phaser.Scene {
         this.time.delayedCall(20000, () => {
             this.createPlayButton();
         });
-        
+
     }
 
     createBackground() {
