@@ -22,7 +22,7 @@ class TitleScene extends Phaser.Scene {
     create() {
         this.createBackground();
         this.createBgStory();
-        this.time.delayedCall(10000, () => {
+        this.time.delayedCall(20000, () => {
             this.createPlayButton();
         });
         
