@@ -3,37 +3,11 @@ class Play extends Phaser.Scene {
         super('playScene');
     }
 
-    preload() {
-        //set load path
-        this.load.path = 'assets/';
-
-        //load sound
-        this.load.audio('jumping', 'jumping.mp3');
-        this.load.audio('walking', 'walking_sound.mp3');
-        this.load.audio('tower', 'tower.mp3');
-
-        //load images
-        this.load.image('character', 'character.png');
-        this.load.image('characterJump', 'characterJump.png');
-        this.load.image('tower', 'tower.png');
-        this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
-        this.load.image('chest', 'chest.png');
-        this.load.image('rock', 'rock1.png');
-        this.load.image('purpleKey', 'purpleKey.png');
-        this.load.image('greenKey', 'greenKey.png');
-        this.load.image('blueKey', 'blueKey.png');
-        this.load.image('powerUp', 'powerUp.png');
-
-        //load the json images 
-        this.load.image('tiles', 'rockSheetNew.png');
-        this.load.tilemapTiledJSON("tilemapJSON", "levelOneNew.json");
-
+    
         
 
         //load level 2 map
         
-
-    }
 
     create() {
         //variables
@@ -183,6 +157,7 @@ class Play extends Phaser.Scene {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
 
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player.body.setSize(300, 600,25,50);
 
     }
 
@@ -398,6 +373,7 @@ class Play extends Phaser.Scene {
                     this.towers.clear(true,true);
                     this.currentTowers=0;
                 }
+                this.player.anims.play('build');
                 this.buildTower();
                 this.currentTowers++;
             }
@@ -408,7 +384,7 @@ class Play extends Phaser.Scene {
             
             if(playerWalking && this.player.body.blocked.down){
                 this.player.anims.play('run', true);
-            } else if (!playerWalking && this.player.body.blocked.down){
+            } else{
                 this.player.setTexture('character');
             }
         }
@@ -469,12 +445,11 @@ class Play extends Phaser.Scene {
 
     buildTower() {
         if (!this.player.destroyed) {
-            this.player.anims.play('build');
             let tower = new Tower(this, this.player,"red");
             this.towers.add(tower);
             this.tower_sound.play();
-            this.physics.add.collider(this.towers, this.player);
             this.physics.add.collider(this.towers, this.terrainLayer);
+            this.physics.add.collider(this.towers, this.player);
             this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy) => {
                 enemy.destroy();
             });

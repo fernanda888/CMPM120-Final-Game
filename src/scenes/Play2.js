@@ -3,39 +3,6 @@ class Play2 extends Phaser.Scene {
         super('play2Scene');
     }
 
-    preload() {
-        //set load path
-        this.load.path = 'assets/';
-         //load sound
-         this.load.audio('jumping', 'jumping.mp3');
-         this.load.audio('walking', 'walking_sound.mp3');
-         this.load.audio('tower', 'tower.mp3');
- 
-         //load images
-         this.load.image('character', 'character.png');
-         this.load.image('characterJump', 'characterJump.png');
-         this.load.image('tower', 'tower.png');
-         this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
-         this.load.image('chest', 'chest.png');
-         this.load.image('rock', 'rock1.png');
-         this.load.image('purpleKey', 'purpleKey.png');
-         this.load.image('greenKey', 'greenKey.png');
-         this.load.image('blueKey', 'blueKey.png');
-         this.load.image('powerUp', 'powerUp.png');
-         this.load.spritesheet('charRun', 'characterRun.png', {
-             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
-         });
-         this.load.spritesheet('charTower', 'characterTower.png', {
-             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 5
-         });
- 
-         //load the json images 
-
-        this.load.image('tiles2', 'levelTwoRocksheet.png');
-        this.load.tilemapTiledJSON("tilemap2JSON", "levelTwo.json");
-        
- 
-    }
     create() {
         //variables
         this.ACCELERATION = 1500;

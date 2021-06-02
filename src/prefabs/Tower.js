@@ -21,10 +21,10 @@ class Tower extends Phaser.Physics.Arcade.Sprite {
         }
         else{
             if (facingRight){
-                super(scene, player.x + 80, player.y - 30, 'tower');
+                super(scene, player.x + 60, player.y - 25, 'tower');
             }
             else{
-                super(scene, player.x - 80, player.y - 30, 'tower');
+                super(scene, player.x - 60, player.y - 25, 'tower');
             }
          
         // set up physics sprite
@@ -35,12 +35,12 @@ class Tower extends Phaser.Physics.Arcade.Sprite {
             this.setScale(0.2);
             this.setBounce(0);
             this.setDragY(0);
-            this.body.pushable = false;
-            this.body.allowGravity = true;
             this.body.checkCollision.down=true;
             this.body.checkCollision.left=true;
             this.body.checkCollision.right=true;
             this.body.checkCollision.up=true;
+            this.body.pushable = false;
+            this.body.allowGravity = true;
             
     }
 }

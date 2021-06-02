@@ -2,21 +2,6 @@ class TitleScene extends Phaser.Scene {
     constructor() {
         super('titleScene');
     }
-    preload() {
-        // set load path
-        this.load.path = 'assets/';
-        this.load.image('titleScreen', 'sky.png');
-        this.load.image('playButton', 'PLAY.png');
-        this.load.image('bgClouds', 'bgClouds.png');
-        this.load.image('fgClouds', 'fgClouds.png');
-        this.load.image('bgMountains', 'bgMountains.png');
-        this.load.image('fgMountains', 'fgMountains.png');
-        this.load.image('sky', 'sky.png');
-        this.load.image('levelTower', 'levelTower.png');
-        this.load.image('button1', 'button1.png');
-        this.load.image('button2', 'button2.png');
-        this.load.image('button3', 'button3.png');
-    }
 
     create() {
         this.createBackground();
