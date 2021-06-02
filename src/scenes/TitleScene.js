@@ -20,26 +20,62 @@ class TitleScene extends Phaser.Scene {
     }
 
     create() {
+        this.createBackground();
+        this.createBgStory();
+        this.time.delayedCall(10000, () => {
+            this.createPlayButton();
+        });
+        
+    }
+
+    createBackground() {
         //title
-        var img = this.add.image(game.config.width, 
+        var img = this.add.image(game.config.width,
             game.config.height, 'titleScreen');
         img.scale = 1
-        img.setOrigin(1,1);
+        img.setOrigin(1, 1);
+        this.add.image(game.config.width, game.config.height, 'fgClouds').setOrigin(1, 1);
+    }
 
+    createPlayButton() {
         //button play
         var playButton = this.add.image(game.config.width,
             game.config.height, 'playButton');
         playButton.scale = 1;
-        playButton.setOrigin(2, 6);
+        playButton.setOrigin(2, 4);
         playButton.setInteractive();
-        playButton.on('pointerdown', () => { 
+        playButton.on('pointerdown', () => {
             this.clickButton();
         });
-        this.add.image(game.config.width, game.config.height, 'fgClouds').setOrigin(1,1);
     }
 
     clickButton() {
         this.scene.start('levelScene');
     }
 
+    createBgStory() {
+        this.label = this.add.text(width/3.5, height/4, '', {font: 'bold 30px Arial', fill: '#2e8e49', wordWrap: {width: width/2}});
+        this.storyText = 'Greetings! You have been chosen to complete a challenging, treacherous quest. Many have failed before, but you have been chosen for your highly qualified skillset and strength. Your quest, should you accept it or not, is to advance the Treasure Tower. Each floor, or level, of the tower hold a treasure, but the treasure is protected by dangerous enemies on each floor. Should you defeat the enemies and obtain the treasures in each level, you will be rewarded with a large sum of the treasure!';
+        this.typewriterTextWrapped(this.storyText);
+    }
+
+    typewriterTextWrapped(text) {
+        const lines = this.label.getWrappedText(text);
+        const wrappedText = lines.join('\n');
+        this.typewriteText(wrappedText);
+    }
+
+    //https://blog.ourcade.co/posts/2020/phaser-3-typewriter-text-effect-bitmap/
+    typewriteText(text) {
+        const length = text.length;
+        let i = 0;
+        this.time.addEvent({
+            callback: () => {
+                this.label.text += text[i];
+                ++i;
+            },
+            repeat: length - 1,
+            delay: 20
+        })
+    }
 }
