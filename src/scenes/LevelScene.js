@@ -56,5 +56,8 @@ class LevelScene extends Phaser.Scene {
         this.playButton2.on('pointerdown', () => { 
             this.scene.start('play2Scene');
         });
+        this.playButton3.on('pointerdown', () => { 
+            this.scene.start('play3Scene');
+        });
     }
 }
