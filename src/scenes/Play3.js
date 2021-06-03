@@ -10,7 +10,7 @@ class Play3 extends Phaser.Scene {
         this.MAX_Y_VEL = 5000;
         this.DRAG = 1500;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
-        this.MAX_TOW = 1;
+        this.MAX_TOW = 2;
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
@@ -23,19 +23,19 @@ class Play3 extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys();
 
          //DELETE this once we have real door
-         //this.addSounds();
+         this.addSounds();
          this.addBackgroundTileMap();
-        // this.addCrackedTiles();
-        // this.addCharacter();
-        // this.addAnimation();
-        // this.addSprites();
-        // this.addBorder();
-        // this.addDoor();
-        // this.spawnL2Enemies();
-        // this.addBlocks();
-        // this.addColliders();
-        // this.addCamera();
-         //this.worldBounds();
+        this.addCrackedTiles();
+        this.addCharacter();
+        this.addAnimation();
+        this.addSprites();
+        this.addBorder();
+        this.addDoor();
+        this.spawnL2Enemies();
+        this.addBlocks();
+        this.addColliders();
+        this.addCamera();
+         this.worldBounds();
  
     }
     addAnimation() {
@@ -107,6 +107,7 @@ class Play3 extends Phaser.Scene {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
         this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
         this.player.body.setSize(300, 600, 25, 50);
+        this.player.body.setMaxVelocityY(1000);
     }
 
     addCamera() {
@@ -373,7 +374,7 @@ class Play3 extends Phaser.Scene {
                     this.topTower.alpha = .5;
                 }
                 else if (this.MAX_TOW == 2) {
-                    this.topTower2.alpha = .5;
+                    //this.topTower2.alpha = .5;
                 }
                 this.currentTowers++;
             }
@@ -386,7 +387,7 @@ class Play3 extends Phaser.Scene {
                         this.topTower.alpha = 1;
                     }
                     else if (this.MAX_TOW == 2) {
-                        this.topTower2.alpha = 1;
+                        //this.topTower2.alpha = 1;
                     }
                 }
             }
@@ -412,7 +413,7 @@ class Play3 extends Phaser.Scene {
     //jump logic for player
     jumpingLogic() {
         if (!this.player.destroyed) {
-            console.log("player's position: ", this.player.x, ": ", this.player.y);
+            //console.log("player's position: ", this.player.x, ": ", this.player.y);
             this.player.isGrounded = this.player.body.blocked.down;
             if (this.player.isGrounded) {
                 this.jumps = this.MAX_JUMPS;
