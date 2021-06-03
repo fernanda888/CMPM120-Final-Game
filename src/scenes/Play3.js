@@ -1,5 +1,5 @@
 class Play3 extends Phaser.Scene {
-    constructor(){
+    constructor() {
         super('play3Scene');
     }
 
@@ -22,9 +22,9 @@ class Play3 extends Phaser.Scene {
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
 
-         //DELETE this once we have real door
-         this.addSounds();
-         this.addBackgroundTileMap();
+        //DELETE this once we have real door
+        this.addSounds();
+        this.addBackgroundTileMap();
         this.addCrackedTiles();
         this.addCharacter();
         this.addAnimation();
@@ -35,8 +35,8 @@ class Play3 extends Phaser.Scene {
         this.addBlocks();
         this.addColliders();
         this.addCamera();
-         this.worldBounds();
- 
+        this.worldBounds();
+
     }
     addAnimation() {
         this.anims.create({
@@ -177,7 +177,7 @@ class Play3 extends Phaser.Scene {
         });
     }
 
-    
+
     //add invisible sprites at each enemy positions
     // so enemies don't fall off platform
     addBlocks() {
