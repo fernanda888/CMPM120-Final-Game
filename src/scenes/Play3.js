@@ -299,7 +299,7 @@ class Play3 extends Phaser.Scene {
                 this.walking_sound.destroy();
                 console.log("player finished");
                 this.currentTowers = 0;
-                this.scene.start('puzzle1Scene');
+                this.scene.start('puzzle1Scene', "level3");
             });
 
             this.physics.add.collider(this.door, this.l1EnemyGroup,
@@ -380,7 +380,7 @@ class Play3 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.down)) {  //right arrow key down
                 if (this.currentTowers > 0) {
-                    var destroyTow = this.towers.getFirstAlive();
+                    var destroyTow = this.towers.getLast(true);
                     destroyTow.destroy();
                     this.currentTowers--;
                     if (this.topTower.alpha == .5) {

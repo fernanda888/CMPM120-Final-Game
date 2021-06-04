@@ -273,7 +273,7 @@ class Play extends Phaser.Scene {
                 this.walking_sound.destroy();
                 console.log("player finished");
                 this.currentTowers=0;
-                this.scene.start('puzzle1Scene');
+                this.scene.start('puzzle1Scene', "level1");
             });
 
         }

@@ -23,6 +23,24 @@ class LevelScene extends Phaser.Scene {
         this.playButton1 = this.add.image(game.config.width/2 + 7.5,
             game.config.height/1.5 + 236.5, 'button1');
 
+        //add locks to levels
+        this.l1 = JSON.parse(localStorage.getItem("l1Complete"));
+        console.log(this.l1);
+        this.l2 = JSON.parse(localStorage.getItem("l2Complete"));
+        //var l3 = JSON.parse(localStorage.getItem("level1"));
+
+        if (!this.l1) {
+            this.lock2 = this.add.image(game.config.width/2 + 7.5,
+                game.config.height/2 + 132, 'lock');
+            this.lock2.setScale(0.3);
+        }
+
+        if (!this.l2) {
+            this.lock3 = this.add.image(game.config.width/2 + 7.5,
+                game.config.height/3 + 36.5, 'lock');
+            this.lock3.setScale(0.3);
+        }
+
         //foreground rocks
         this.fgMountains = this.add.tileSprite(0, 0, game.config.width, 
             game.config.height, 'fgMountains').setOrigin(0, 0);
@@ -53,11 +71,18 @@ class LevelScene extends Phaser.Scene {
         this.playButton1.on('pointerdown', () => { 
             this.scene.start('playScene');
         });
-        this.playButton2.on('pointerdown', () => { 
-            this.scene.start('play2Scene');
-        });
-        this.playButton3.on('pointerdown', () => { 
-            this.scene.start('play3Scene');
-        });
+
+        if (this.l1) {
+            this.playButton2.on('pointerdown', () => { 
+                this.scene.start('play2Scene');
+            });
+        }
+
+        if (this.l2) {
+            this.playButton3.on('pointerdown', () => { 
+                this.scene.start('play3Scene');
+            });
+        } 
+        
     }
 }

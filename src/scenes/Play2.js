@@ -239,20 +239,20 @@ class Play2 extends Phaser.Scene {
 
         if (!this.jumping) {
             console.log("adding level 1 enemy:");
-            let enemy1 = new L1Enemy(this, -100 - speedVariance, this.enemy1Spawn.x, this.enemy1Spawn.y);
+            let enemy1 = new L2Enemy(this, -100 - speedVariance, this.enemy1Spawn.x, this.enemy1Spawn.y);
             enemy1.name = "enemy1";
             this.l2EnemyGroup.add(enemy1);
 
-            let enemy2 = new L1Enemy(this, -100 - speedVariance, this.enemy2Spawn.x, this.enemy2Spawn.y);
+            let enemy2 = new L2Enemy(this, -100 - speedVariance, this.enemy2Spawn.x, this.enemy2Spawn.y);
             enemy2.name = "enemy2";
             this.l2EnemyGroup.add(enemy2);
 
-            let enemy3 = new L1Enemy(this, -100 - speedVariance, this.enemy3Spawn.x, this.enemy3Spawn.y);
+            let enemy3 = new L2Enemy(this, -100 - speedVariance, this.enemy3Spawn.x, this.enemy3Spawn.y);
             enemy3.name = "enemy3";
             //console.log("enemy 3: ", enemy3);
             this.l2EnemyGroup.add(enemy3);
 
-            let enemy4 = new L1Enemy(this, -100 - speedVariance, this.enemy4Spawn.x, this.enemy4Spawn.y);
+            let enemy4 = new L2Enemy(this, -100 - speedVariance, this.enemy4Spawn.x, this.enemy4Spawn.y);
             enemy4.name = "enemy4";
             this.l2EnemyGroup.add(enemy4);
 
@@ -310,7 +310,7 @@ class Play2 extends Phaser.Scene {
                 this.walking_sound.destroy();
                 console.log("player finished");
                 this.currentTowers = 0;
-                this.scene.start('puzzle1Scene');
+                this.scene.start('puzzle1Scene', "level2");
             });
 
             this.physics.add.collider(this.door, this.l1EnemyGroup,
@@ -389,9 +389,9 @@ class Play2 extends Phaser.Scene {
                 }
                 this.currentTowers++;
             }
-            if (Phaser.Input.Keyboard.JustDown(cursors.down)) {  //right arrow key down
+            if (Phaser.Input.Keyboard.JustDown(cursors.down)) {  //down arrow key down
                 if (this.currentTowers > 0) {
-                    var destroyTow = this.towers.getFirstAlive();
+                    var destroyTow = this.towers.getLast(true);
                     destroyTow.destroy();
                     this.currentTowers--;
                     if (this.topTower.alpha == .5) {
@@ -424,7 +424,7 @@ class Play2 extends Phaser.Scene {
     //jump logic for player
     jumpingLogic() {
         if (!this.player.destroyed) {
-            console.log("player's position: ", this.player.x, ": ", this.player.y);
+            //console.log("player's position: ", this.player.x, ": ", this.player.y);
             this.player.isGrounded = this.player.body.blocked.down;
             if (this.player.isGrounded) {
                 this.jumps = this.MAX_JUMPS;

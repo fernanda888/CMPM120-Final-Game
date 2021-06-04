@@ -5,7 +5,7 @@ class L2Enemy extends Phaser.Physics.Arcade.Sprite {
         // set up physics sprite
         scene.physics.add.existing(this);  
         scene.add.existing(this);               // add to existing scene, displayList, updateList
-        this.setScale(0.4);
+        this.setScale(0.2);
         // add to physics system
         this.setVelocityX(velocity);            // make it go!
         this.setCollideWorldBounds(true); 
@@ -23,7 +23,7 @@ class L2Enemy extends Phaser.Physics.Arcade.Sprite {
         if(this.newEnemy && this.x < centerX) {
             this.newEnemy = false;
             // (recursively) call parent scene method from this context
-            this.scene.addL1Enemy(this.parent, this.velocity);
+            this.scene.addL2Enemy(this.parent, this.velocity);
         }        
     }
 }
