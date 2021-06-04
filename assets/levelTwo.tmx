@@ -82,7 +82,7 @@
   </tile>
   <tile id="15">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="16">
@@ -305,7 +305,7 @@
 </data>
  </layer>
  <objectgroup id="3" name="Spawn" offsetx="0" offsety="4.92694">
-  <object id="1" name="p1Spawn" x="551.001" y="2805.78">
+  <object id="1" name="p1Spawn" x="1031.93429154751" y="4936.16220694767">
    <point/>
   </object>
   <object id="2" name="key2Spawn" x="139.566" y="3336.2">
