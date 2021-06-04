@@ -3,7 +3,6 @@ class EndScene extends Phaser.Scene {
         super('endScreen');
     }
     preload() {
-        this.load.image('endScene', 'assets/endScene.png');
         this.load.image('restartButton', 'assets/restartButton.png');
         this.load.image('quitButton', 'assets/quitButton2.png');
         this.load.image('endScreen', 'assets/endScreen.png');
@@ -15,17 +14,12 @@ class EndScene extends Phaser.Scene {
             game.config.height, 'endScreen');
         end.scale = 1
         end.setOrigin(1, 1);
-        //title
-        var img = this.add.image(game.config.width,
-            game.config.height, 'endScene');
-        img.scale = 0.18
-        img.setOrigin(1.5, 1.3);
 
         //button restart
         var restartButton = this.add.image(game.config.width,
             game.config.height, 'restartButton');
         restartButton.scale = 0.18
-        restartButton.setOrigin(3.1, 1.5);
+        restartButton.setOrigin(5.7, 1.5);
         restartButton.setInteractive();
         restartButton.on('pointerdown', function (pointer) {
             cont = true;
