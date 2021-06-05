@@ -340,7 +340,7 @@ class Play2 extends Phaser.Scene {
                 this.walking_sound.destroy();
                 console.log("player destroyed");
                 //change scene to end game
-                this.scene.start('endScreen');
+                this.scene.start('endScreen', "play2Scene");
             });
 
         }

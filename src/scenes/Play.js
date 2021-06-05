@@ -263,7 +263,7 @@ class Play extends Phaser.Scene {
                 this.walking_sound.destroy();
                 console.log("player destroyed");
                 //change scene to end game
-                this.scene.start('endScreen');
+                this.scene.start('endScreen', "playScene");
             });
 
             this.physics.add.collider(this.player, this.door, () => {

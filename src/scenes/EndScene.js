@@ -8,7 +8,7 @@ class EndScene extends Phaser.Scene {
         this.load.image('endScreen', 'assets/endScreen.png');
     }
 
-    create() {
+    create(screen) {
         //endScreen
         var end = this.add.image(game.config.width,
             game.config.height, 'endScreen');
@@ -16,6 +16,7 @@ class EndScene extends Phaser.Scene {
         end.setOrigin(1, 1);
 
         //button restart
+        this.screen = screen;
         var restartButton = this.add.image(game.config.width,
             game.config.height, 'restartButton');
         restartButton.scale = 0.18
@@ -41,7 +42,7 @@ class EndScene extends Phaser.Scene {
     update() {
         if (cont == true) {
             cont = false;
-            this.scene.start('playScene');
+            this.scene.start(this.screen);
         }
         else if (quit == true) {
             quit = false;
