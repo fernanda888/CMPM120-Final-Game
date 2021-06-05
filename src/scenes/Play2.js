@@ -391,7 +391,7 @@ class Play2 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    var destroyTow = this.towers.getLast(true);
+                    var destroyTow=this.towers.getFirstAlive();
                     destroyTow.destroy();
                     this.currentTowers--;
                 }

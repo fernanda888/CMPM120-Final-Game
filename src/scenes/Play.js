@@ -122,6 +122,14 @@ class Play extends Phaser.Scene {
     }
 
     addSounds() {
+        // set up music
+        this.song1 = this.sound.add('musicL1', { 
+            mute: false,
+            volume: 0.03,
+            rate: 1,
+            loop: true 
+        });
+        this.song1.play();
          //set up sounds
          this.walking_sound = this.sound.add('walking', {
             mute: false,
@@ -276,6 +284,7 @@ class Play extends Phaser.Scene {
                 this.player.destroy();
                 this.jumping_sound.destroy();
                 this.walking_sound.destroy();
+                this.song1.destroy();
                 console.log("player destroyed");
                 //change scene to end game
                 this.scene.start('endScreen', "playScene");
@@ -286,6 +295,7 @@ class Play extends Phaser.Scene {
                 this.player.destroy();
                 this.jumping_sound.destroy();
                 this.walking_sound.destroy();
+                this.song1.destroy();
                 console.log("player finished");
                 this.currentTowers=0;
                 this.scene.start('puzzle1Scene', "level1");

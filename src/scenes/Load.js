@@ -25,6 +25,7 @@ class Load extends Phaser.Scene {
          this.load.audio('tower', 'tower.wav');
          this.load.audio('keySound', 'keySound.wav');
          this.load.audio('enemyKill', 'enemyKill.wav');
+         this.load.audio('musicL1', ['TowerMusic(1).mp3']);
  
          //load images
          this.load.image('character', 'character.png');
