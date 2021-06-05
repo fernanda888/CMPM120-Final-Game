@@ -86,11 +86,11 @@ class Play3 extends Phaser.Scene {
     }
 
     addSounds() {
-        //set up sounds
-        this.walking_sound = this.sound.add('walking', {
+         //set up sounds
+         this.walking_sound = this.sound.add('walking', {
             mute: false,
             loop: true,
-            rate: 4,
+            rate: 7,
             volume: .05
         });
         this.jumping_sound = this.sound.add('jumping', {
@@ -98,6 +98,18 @@ class Play3 extends Phaser.Scene {
             volume: .2,
         });
         this.tower_sound = this.sound.add('tower', {
+            mute: false,
+            volume: .2,
+        });
+        this.tile_sound = this.sound.add('tileBreak', {
+            mute: false,
+            volume: .4,
+        });
+        this.enemy_kill = this.sound.add('enemyKill', {
+            mute: false,
+            volume: .4,
+        });
+        this.key_sound = this.sound.add('keySound', {
             mute: false,
             volume: .2,
         });
@@ -142,6 +154,7 @@ class Play3 extends Phaser.Scene {
         this.physics.add.overlap(this.key1, this.player, () => {
             foundKey1 = true;
             this.topkey1.alpha = 1;
+            this.key_sound.play();
             this.key1.destroy();
         });
 
@@ -151,6 +164,7 @@ class Play3 extends Phaser.Scene {
         this.physics.add.overlap(this.key2, this.player, () => {
             foundKey2 = true;
             this.topkey2.alpha = 1;
+            this.key_sound.play();
             this.key2.destroy();
         });
 
@@ -160,6 +174,7 @@ class Play3 extends Phaser.Scene {
         this.physics.add.overlap(this.key3, this.player, () => {
             foundKey3 = true;
             this.topkey3.alpha = 1;
+            this.key_sound.play();
             this.key3.destroy();
         });
         //add towers group
@@ -428,8 +443,9 @@ class Play3 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    this.towers.clear(true, true);
-                    this.currentTowers = 0;
+                    var destroyTow = this.towers.getLast(true);
+                    destroyTow.destroy();
+                    this.currentTowers--;
                 }
                 this.player.anims.play('build');
                 this.buildTower();
@@ -457,7 +473,7 @@ class Play3 extends Phaser.Scene {
 
             if (playerWalking && this.player.body.blocked.down) {
                 this.player.anims.play('run', true);
-            } else if (!playerWalking && this.player.body.blocked.down) {
+            } else if (!playerWalking && this.player.body.blocked.down && !this.building) {
                 this.player.setTexture('character');
             }
         }
@@ -465,10 +481,10 @@ class Play3 extends Phaser.Scene {
     }
 
     playSounds() {
-        if (cursors.left.isDown && playerWalking == false) {
+        if (cursors.left.isDown && !this.jumping) {
             this.walking_sound.play();
         }
-        if (cursors.right.isDown && playerWalking == false) {
+        if (cursors.right.isDown && !this.jumping) {
             this.walking_sound.play();
         }
     }
@@ -527,9 +543,11 @@ class Play3 extends Phaser.Scene {
             this.physics.add.collider(this.towers, this.player);
             this.physics.add.collider(this.towers, this.terrainGroup, (obj1, obj2) => {
                 console.log("destroying cracked tiles");
+                this.tile_sound.play();
                 obj2.destroy();
             });
             this.physics.add.overlap(this.l2EnemyGroup, this.towers, (enemy) => {
+                this.enemy_kill.play();
                 enemy.destroy();
             });
         }
