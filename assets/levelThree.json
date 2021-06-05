@@ -194,7 +194,19 @@
                  "width":0,
                  "x":596.02,
                  "y":742.74
-                }, 
+                },
+                {
+                     "height":0,
+                     "id":14,
+                     "name":"powerUp3",
+                     "point":true,
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":798,
+                     "y":250
+                    }, 
                 {
                  "height":0,
                  "id":15,

@@ -344,6 +344,9 @@
   <object id="13" name="powerUp" x="596.02" y="742.74">
    <point/>
   </object>
+  <object id="14" name="powerUp3" x="798" y="367">
+   <point/>
+  </object>
   <object id="15" name="flyingEnemy5" x="1634" y="289.073">
    <point/>
   </object>

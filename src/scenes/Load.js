@@ -37,6 +37,7 @@ class Load extends Phaser.Scene {
          this.load.image('greenKey', 'greenKey.png');
          this.load.image('blueKey', 'blueKey.png');
          this.load.image('powerUp', 'powerUp.png');
+         this.load.image('powerUp3', 'invincibility.png');
          this.load.image('borderH', 'borderH.png');
          this.load.image('keyFrame', 'keyFrame.png');
          this.load.image('towerFrame', 'towerFrame.png');

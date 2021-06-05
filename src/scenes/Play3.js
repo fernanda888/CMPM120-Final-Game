@@ -105,7 +105,7 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, 1419, 317);
+        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
@@ -166,14 +166,24 @@ class Play3 extends Phaser.Scene {
         });
 
         this.towerExists = this.MAX_TOW;
+        // //add powerUP
+        // const PUspawn = this.map.findObject('Spawn', obj => obj.name === 'powerUp');
+        // this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+        // this.powerUp.body.allowGravity = false;
+        // this.physics.add.overlap(this.powerUp, this.player, () => {
+        //     this.powerUp.destroy();
+        //     this.MAX_TOW = 2;
+        //     this.topTower2 = this.add.image(width / 3.8, height / 4.5, 'tower').setScale(0.10).setScrollFactor(0);
+        // });
+
         //add powerUP
-        const PUspawn = this.map.findObject('Spawn', obj => obj.name === 'powerUp');
-        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+        const PUspawn = this.map.findObject('Spawn', obj => obj.name === 'powerUp3');
+        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp3').setScale(0.1);
         this.powerUp.body.allowGravity = false;
         this.physics.add.overlap(this.powerUp, this.player, () => {
             this.powerUp.destroy();
-            this.MAX_TOW = 2;
-            this.topTower2 = this.add.image(width / 3.8, height / 4.5, 'tower').setScale(0.10).setScrollFactor(0);
+            //get invincibility
+            this.enemyCollider.destroy();
         });
     }
 
@@ -196,7 +206,7 @@ class Play3 extends Phaser.Scene {
         this.border4 = this.addBlock(702, 367);
         this.borderGroup.add(this.border4);
 
-        this.border5 = this.addBlock(893, 367);
+        this.border5 = this.addBlock(900, 367);
         this.borderGroup.add(this.border5);
 
         this.border6 = this.addBlock(896, 817);
@@ -372,7 +382,7 @@ class Play3 extends Phaser.Scene {
 
                 });
 
-            this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
+            this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
                 this.jumping_sound.destroy();
@@ -381,6 +391,8 @@ class Play3 extends Phaser.Scene {
                 //change scene to end game
                 this.scene.start('endScreen');
             });
+
+
 
         }
 
@@ -463,7 +475,7 @@ class Play3 extends Phaser.Scene {
     //jump logic for player
     jumpingLogic() {
         if (!this.player.destroyed) {
-            console.log("player's position: ", this.player.x, ": ", this.player.y);
+            //console.log("player's position: ", this.player.x, ": ", this.player.y);
             this.player.isGrounded = this.player.body.blocked.down;
             if (this.player.isGrounded) {
                 this.jumps = this.MAX_JUMPS;
