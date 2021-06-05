@@ -169,7 +169,7 @@ class Puzzle1 extends Phaser.Scene {
             }
             if (this.level === "level3") {
                 console.log("completed level3");
-                var l2Complete = true;
+                var l3Complete = true;
                 localStorage.setItem("l3Complete", JSON.stringify(l3Complete));
             }
             this.scene.start('levelScene');

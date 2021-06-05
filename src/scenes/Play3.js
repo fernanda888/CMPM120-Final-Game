@@ -105,7 +105,7 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player = new Player(this, 1419, 317);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
@@ -193,8 +193,17 @@ class Play3 extends Phaser.Scene {
         this.border3 = this.addBlock(1303, 1867);
         this.borderGroup.add(this.border3);
 
-        // this.border4 = this.addBlock(995, 4470);
-        // this.borderGroup.add(this.border4);
+        this.border4 = this.addBlock(702, 367);
+        this.borderGroup.add(this.border4);
+
+        this.border5 = this.addBlock(893, 367);
+        this.borderGroup.add(this.border5);
+
+        this.border6 = this.addBlock(896, 817);
+        this.borderGroup.add(this.border6);
+
+        this.border7 = this.addBlock(397, 117);
+        this.borderGroup.add(this.border7);
 
     }
 
@@ -225,10 +234,18 @@ class Play3 extends Phaser.Scene {
         this.enemy2Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy2');
         this.enemy3Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy3');
         this.enemy4Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy4');
+        this.enemy5Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy9');
+        this.enemy6Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy10');
+        this.enemy7Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy11');
+        this.enemy8Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy12');
+        this.enemy9Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy13');
+        this.enemy10Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy14');
+        this.enemy11Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy15');
+        this.enemy12Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy16');
 
         if (!this.jumping) {
             console.log("adding level 1 enemy:");
-            let enemy1 = new L1Enemy(this, -100 - speedVariance, this.enemy1Spawn.x, this.enemy1Spawn.y);
+            let enemy1 = new L2Enemy(this, -100 - speedVariance, this.enemy1Spawn.x, this.enemy1Spawn.y);
             enemy1.name = "enemy1";
             this.l2EnemyGroup.add(enemy1);
 
@@ -236,7 +253,7 @@ class Play3 extends Phaser.Scene {
             enemy2.name = "enemy2";
             this.l2EnemyGroup.add(enemy2);
 
-            let enemy3 = new L1Enemy(this, -100 - speedVariance, this.enemy3Spawn.x, this.enemy3Spawn.y);
+            let enemy3 = new L2Enemy(this, -100 - speedVariance, this.enemy3Spawn.x, this.enemy3Spawn.y);
             enemy3.name = "enemy3";
             //console.log("enemy 3: ", enemy3);
             this.l2EnemyGroup.add(enemy3);
@@ -244,6 +261,39 @@ class Play3 extends Phaser.Scene {
             let enemy4 = new L1Enemy(this, -100 - speedVariance, this.enemy4Spawn.x, this.enemy4Spawn.y);
             enemy4.name = "enemy4";
             this.l2EnemyGroup.add(enemy4);
+
+            let enemy5 = new L2Enemy(this, -100 - speedVariance, this.enemy5Spawn.x, this.enemy5Spawn.y);
+            enemy5.name = "enemy5";
+            this.l2EnemyGroup.add(enemy5);
+
+            let enemy6 = new L2Enemy(this, -100 - speedVariance, this.enemy6Spawn.x, this.enemy6Spawn.y);
+            enemy6.name = "enemy6";
+            this.l2EnemyGroup.add(enemy6);
+
+            let enemy7 = new L1Enemy(this, -100 - speedVariance, this.enemy7Spawn.x, this.enemy7Spawn.y);
+            enemy7.name = "enemy7";
+            this.l2EnemyGroup.add(enemy7);
+
+            let enemy8 = new L2Enemy(this, -100 - speedVariance, this.enemy8Spawn.x, this.enemy8Spawn.y);
+            enemy8.name = "enemy8";
+            this.l2EnemyGroup.add(enemy8);
+
+            let enemy9 = new L2Enemy(this, -100 - speedVariance, this.enemy9Spawn.x, this.enemy9Spawn.y);
+            enemy9.name = "enemy9";
+            this.l2EnemyGroup.add(enemy9);
+
+            let enemy10 = new L1Enemy(this, -100 - speedVariance, this.enemy10Spawn.x, this.enemy10Spawn.y);
+            enemy10.name = "enemy10";
+            this.l2EnemyGroup.add(enemy10);
+
+            let enemy11 = new L1Enemy(this, -100 - speedVariance, this.enemy11Spawn.x, this.enemy11Spawn.y);
+            enemy11.name = "enemy11";
+            this.l2EnemyGroup.add(enemy11);
+
+            let enemy12 = new L2Enemy(this, -100 - speedVariance, this.enemy12Spawn.x, this.enemy12Spawn.y);
+            enemy12.name = "enemy12";
+            this.l2EnemyGroup.add(enemy12);
+
 
         }
 
@@ -302,10 +352,10 @@ class Play3 extends Phaser.Scene {
                 this.scene.start('puzzle1Scene', "level3");
             });
 
-            this.physics.add.collider(this.door, this.l1EnemyGroup,
-                (enemy, border) => {
-                    this.changeEnemyDirection(enemy);
-                });
+            // this.physics.add.collider(this.door, this.l1EnemyGroup,
+            //     (enemy, border) => {
+            //         this.changeEnemyDirection(enemy);
+            //     });
 
             this.physics.add.collider(this.terrainLayer, this.l2EnemyGroup,
                 (enemy, border) => {
@@ -413,7 +463,7 @@ class Play3 extends Phaser.Scene {
     //jump logic for player
     jumpingLogic() {
         if (!this.player.destroyed) {
-            //console.log("player's position: ", this.player.x, ": ", this.player.y);
+            console.log("player's position: ", this.player.x, ": ", this.player.y);
             this.player.isGrounded = this.player.body.blocked.down;
             if (this.player.isGrounded) {
                 this.jumps = this.MAX_JUMPS;

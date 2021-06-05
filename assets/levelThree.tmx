@@ -383,5 +383,29 @@
   <object id="29" name="enemy12" x="848" y="355.073">
    <point/>
   </object>
+  <object id="30" name="flyingEnemy9" x="1979" y="317">
+   <point/>
+  </object>
+  <object id="31" name="flyingEnemy10" x="1982" y="1367">
+   <point/>
+  </object>
+  <object id="32" name="flyingEnemy11" x="890" y="367">
+   <point/>
+  </object>
+  <object id="33" name="flyingEnemy12" x="320" y="417">
+   <point/>
+  </object>
+  <object id="34" name="flyingEnemy13" x="43" y="117">
+   <point/>
+  </object>
+  <object id="35" name="flyingEnemy14" x="85" y="117">
+   <point/>
+  </object>
+  <object id="36" name="flyingEnemy15" x="348" y="117">
+   <point/>
+  </object>
+  <object id="37" name="flyingEnemy16" x="359" y="117">
+   <point/>
+  </object>
  </objectgroup>
 </map>
