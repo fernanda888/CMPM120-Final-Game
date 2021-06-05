@@ -128,6 +128,7 @@ class Play3 extends Phaser.Scene {
 
         //add key and tower indicators 
         this.topTower = this.add.image(width / 4.3, height / 4.5, 'tower').setScale(0.10).setScrollFactor(0);
+        this.topTower2 = this.add.image(width / 3.8, height / 4.5, 'tower').setScale(0.10).setScrollFactor(0);
         this.topkey1 = this.add.image(width / 1.3 - 50, height / 4.55, 'purpleKey').setScale(0.15).setScrollFactor(0);
         this.topkey1.alpha = .5;
         this.topkey2 = this.add.image(width / 1.3, height / 4.55, 'greenKey').setScale(0.15).setScrollFactor(0);
