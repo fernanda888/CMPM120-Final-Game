@@ -290,11 +290,8 @@ class Play extends Phaser.Scene {
 
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
-              
+                this.sound.removeAll();
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
-                this.songL1.destroy();
                 console.log("player finished");
                 this.currentTowers=0;
                 this.scene.start('puzzle1Scene', "level1");
