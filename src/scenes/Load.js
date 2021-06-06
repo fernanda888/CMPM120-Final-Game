@@ -87,6 +87,12 @@ class Load extends Phaser.Scene {
         this.load.tilemapTiledJSON("tilemap2JSON", "levelTwo.json");
         this.load.tilemapTiledJSON("tilemap3JSON", "levelThree.json");
         this.load.image('winScreen', 'winScreen.png');
+
+        //puzzle assets
+        this.load.image('puzzleBack', 'puzzleBack.png');
+        this.load.audio('puzzleEnd', 'puzzleEnd.wav');
+        this.load.image('goldCoin','goldCoin.png');
+        this.load.image('openChest','chestOpen.png');
     }
 
     create() {

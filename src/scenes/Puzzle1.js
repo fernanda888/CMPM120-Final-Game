@@ -2,26 +2,23 @@ class Puzzle1 extends Phaser.Scene {
     constructor() {
         super('puzzle1Scene');
     }
+     create(level) {
+        //create audio
+        this.puzzleEnd = this.sound.add('puzzleEnd', { 
+            mute: false,
+            loop: false,
+            rate: 1,
+            volume: 0.4
+        });
+        this.keySound = this.sound.add('keySound', { 
+            mute: false,
+            loop: false,
+            rate: 1,
+            volume: 0.05
+        });
 
-    preload() {
-        //set load path
-        this.load.path = 'assets/';
-        this.load.audio('tower', 'tower.mp3');
-        //load sound
-        this.load.audio('tower', 'tower.mp3');
+        
 
-        //load images
-        this.load.image('blueTower', 'blueTower.png');
-        this.load.image('purpleTower', 'purpleTower.png');
-        this.load.image('greenTower', 'greenTower.png');
-        this.load.image('keyRock', 'rock1.png');
-        this.load.image('purpleKey', 'purpleKey.png');
-        this.load.image('greenKey', 'greenKey.png');
-        this.load.image('blueKey', 'blueKey.png');
-        this.load.image('pad', 'TowerPad.png');
-
-    }
-    create(level) {
         //variables
         this.ACCELERATION = 5;
         this.MAX_X_VEL = 500;   // pixels/second
@@ -30,150 +27,152 @@ class Puzzle1 extends Phaser.Scene {
         this.spacebar = this.input.keyboard.addKey('SPACE');
         this.level = level;
 
-        this.tower_sound = this.sound.add('tower', {
-            mute: false,
-            volume: .2,
-        });
-
-        // set up Phaser-provided cursor key input
-        cursors = this.input.keyboard.createCursorKeys();
-
-        this.cameras.main.setBackgroundColor('#D0D0D0')
-
-        //add background
-        // this.pad=this.add.image(width/2, height/2, 'pad');
-        // this.pad.setScale(0.7);
-
+        //puzzle scene boolean for tower
         puzzle1Scene = true;
 
-        //set up towers
-        this.purpleTower = new Tower(this, this.player, "purple");
-        this.towerSetUp(this.purpleTower, (width / 2 - 450), (height / 2));
+        this.cameras.main.setBackgroundColor('#D0D0D0');
 
-        this.greenTower = new Tower(this, this.player, "green");
-        this.towerSetUp(this.greenTower, (width / 2), (height / 2));
+        //add background
+        this.backG=this.add.image(width/2, height/2, 'puzzleBack');
+        this.backG.setScale(2.5);
 
-        this.blueTower = new Tower(this, this.player, "blue");
-        this.towerSetUp(this.blueTower, (width / 2 + 450), (height / 2));
+        //add treasure chest
+        this.chest = this.physics.add.sprite(width/2, height/2+190, 'chest');
+        this.chest.setScale(1.5);
+        this.chest.body.allowGravity = false;
+        this.chest.body.immovable = true;
+        this.chest.body.moves = false;
 
-
-
+        
+        this.rect1 = this.add.rectangle(527, 662, 100, 100, 0x000000);
+        this.rect2 = this.add.rectangle(750, 662, 100, 100, 0x000000);
+        this.rect3 = this.add.rectangle(972, 662, 100, 100, 0x000000);
+        this.selectRect= this.add.rectangle(527, 662, 100, 100, 0xff33cc);
+        this.rotateRect(this.rect1);
+        this.rotateRect(this.rect2);
+        this.rotateRect(this.rect3);
+        this.rotateRect(this.selectRect);
+        this.flashing=this.tweens.add({
+            targets: this.selectRect,
+            alpha: 0,
+            yoyo: true,
+            repeat: -1
+        });
+        //set up key visual
+        this.keyFrame=this.add.image(width/1.2, height/6, 'keyFrame').setScale(0.50).setScrollFactor(0);
+        this.topkey1=this.add.image(this.keyFrame.x-90, this.keyFrame.y, 'purpleKey').setScale(0.45).setScrollFactor(0);
+        if(foundKey1){
+            this.topkey1.alpha=1;
+        }
+        else{
+            this.topkey1.alpha=.5;
+        }
+        this.topkey2=this.add.image(this.keyFrame.x, this.keyFrame.y, 'greenKey').setScale(0.45).setScrollFactor(0);
+        if(foundKey2){
+            this.topkey2.alpha=1;
+        }
+        else{
+            this.topkey2.alpha=.5;
+        }
+        this.topkey3=this.add.image(this.keyFrame.x+90, this.keyFrame.y, 'blueKey').setScale(0.45).setScrollFactor(0);
+        if(foundKey3){
+            this.topkey3.alpha=1;
+        }
+        else{
+            this.topkey2.alpha=.5;
+        }
+        //booleans to check keys places
         this.purpleKey = false;
         this.blueKey = false;
         this.greenKey = false;
 
-        this.add.rectangle(width / 2, height - 100, 148, 148, 0xffffff);
-        this.add.triangle(width / 2 + 70, height - 100, 50, 100, 100, 50, 50, 0, 0x000000);
-        this.add.triangle(width / 2 - 70, height - 100, 50, 100, 100, 50, 50, 0, 0x000000).setRotation(3.15);
-        if (foundKey1) {
-            this.displayKey = this.add.image(width / 2, height - 100, 'purpleKey').setScale(.3).setScrollFactor(0);
-            this.purpleKey = true;
-            this.blueKey = false;
-            this.greenKey = false;
-        }
-        else if (foundKey2) {
-            this.displayKey = this.add.image(width / 2, height - 100, 'greenKey').setScale(.3).setScrollFactor(0);
-            this.purpleKey = false;
-            this.blueKey = false;
-            this.greenKey = true;
-        }
-        else if (foundKey3) {
-            this.displayKey = this.add.image(width / 2, height - 100, 'blueKey').setScale(.3).setScrollFactor(0);
-            this.purpleKey = false;
-            this.blueKey = true;
-            this.greenKey = false;
-        }
-
-
-
     }
-    towerSetUp(tower, x, y) {
-        tower.setScale(1.5);
-        tower.x = x;
-        tower.y = y;
-        tower.alpha = .4;
+    rotateRect(rectangle){
+        rectangle.angle+=45;
     }
     update() {
-        if (cursors.left.isDown) {
-            if (this.purpleKey && foundKey3) {
-                this.purpleKey = false;
-                this.blueKey = true;
-                this.displayKey = this.add.image(width / 2, height - 100, 'blueKey').setScale(.3).setScrollFactor(0);
+        if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+            if(foundKey1 && !this.purpleKey){
+                this.purpleKey=true;
+                this.rect1.destroy();
+                this.keySound.play();
+                this.selectRect.x=this.rect2.x;
+                this.selectRect.y=this.rect2.y;
             }
-            else if (this.blueKey && foundKey2) {
-                this.blueKey = false;
-                this.greenKey = true;
-
-                this.displayKey = this.add.image(width / 2, height - 100, 'greenKey').setScale(.3).setScrollFactor(0);
+            else if(foundKey2 && !this.blueKey){
+                this.blueKey=true;
+                this.rect2.destroy();
+                this.keySound.play();
+                this.selectRect.x=this.rect3.x;
+                this.selectRect.y=this.rect3.y;
             }
-            else if (this.greenKey && foundKey1) {
-                this.greenKey = false;
-                this.purpleKey = true;
-
-                this.displayKey = this.add.image(width / 2, height - 100, 'purpleKey').setScale(.3).setScrollFactor(0);
+            else if(foundKey3 && !this.greenKey){
+                this.greenKey=true;
+                this.rect3.destroy();
+                this.keySound.play();
+                this.flashing.stop();
+                this.selectRect.destroy();
+                //if found all the keys
+                if(this.purpleKey && this.blueKey && this.greenKey){
+                    this.puzzleEnd.play();
+                    this.add.particles('goldCoin',{
+                        x: this.chest.x+200,
+                        y: this.chest.y,
+                        angle: { min: 180, max: 360 },
+                        speed: 400,
+                        gravityY: -350,
+                        lifespan: 5000,
+                        quantity: 4,
+                        scale: { min: 0.5, max: 1.5 }
+                    });
+                    this.add.particles('goldCoin',{
+                        x: this.chest.x,
+                        y: this.chest.y,
+                        angle: { min: 180, max: 360 },
+                        speed: 400,
+                        gravityY: -350,
+                        lifespan: 5000,
+                        quantity: 4,
+                        scale: { min: 0.5, max: 1.5 }
+                    });
+                    this.add.particles('goldCoin',{
+                        x: this.chest.x-200,
+                        y: this.chest.y,
+                        angle: { min: 180, max: 360 },
+                        speed: 400,
+                        gravityY: -350,
+                        lifespan: 5000,
+                        quantity: 4,
+                        scale: { min: 0.5, max: 1.5 }
+                    });
+                    this.add.image(this.chest.x,this.chest.y+128,'openChest').setScale(1.5);
+                    this.chest.destroy();
+                    this.time.delayedCall(9000, ()=>{
+                        puzzle1Scene = false;
+                        //storing completion of level bool in local storage
+                        console.log(this.level);
+                        if (this.level === "level1") {
+                            console.log("completed level1");
+                            var l1Complete = true;
+                            localStorage.setItem("l1Complete", JSON.stringify(l1Complete));
+                        }
+                        if (this.level === "level2") {
+                            console.log("completed level2");
+                            var l2Complete = true;
+                            localStorage.setItem("l2Complete", JSON.stringify(l2Complete));
+                        }
+                        if (this.level === "level3") {
+                            console.log("completed level3");
+                            var l3Complete = true;
+                            localStorage.setItem("l3Complete", JSON.stringify(l3Complete));
+                        }
+                        this.scene.start('levelScene');
+                        
+                    });
+                }
             }
-
         }
-        else if (cursors.right.isDown) {  //right arrow key down
-            if (this.purpleKey && foundKey2) {
-                this.purpleKey = false;
-                this.greenKey = true;
-
-                this.displayKey = this.add.image(width / 2, height - 100, 'greenKey').setScale(.3).setScrollFactor(0);
-            }
-            else if (this.greenKey && foundKey3) {
-                this.greenKey = false;
-                this.blueKey = true;
-
-                this.displayKey = this.add.image(width / 2, height - 100, 'blueKey').setScale(.3).setScrollFactor(0);
-            }
-            else if (this.blueKey && foundKey2) {
-                this.blueKey = false;
-                this.purpleKey = true;
-                this.displayKey = this.add.image(width / 2, height - 100, 'purpleKey').setScale(.3).setScrollFactor(0);
-            }
-        }
-
-        else if (this.spacebar.isDown) { //spacebar key down
-            if (this.purpleKey) {
-                this.tower_sound.play();
-                this.purpleTower.alpha = 1;
-                this.purpleDone = true;
-            }
-            else if (this.greenKey) {
-                this.tower_sound.play();
-                this.greenTower.alpha = 1;
-                this.greenDone = true;
-            }
-            else if (this.blueKey) {
-                this.tower_sound.play();
-                this.blueTower.alpha = 1
-                this.blueDone = true;
-            }
-
-        }
-
-        if (this.purpleDone && this.greenDone && this.blueDone) {
-            puzzle1Scene = false;
-            //storing completion of level bool in local storage
-            console.log(this.level);
-            if (this.level === "level1") {
-                console.log("completed level1");
-                var l1Complete = true;
-                localStorage.setItem("l1Complete", JSON.stringify(l1Complete));
-            }
-            if (this.level === "level2") {
-                console.log("completed level2");
-                var l2Complete = true;
-                localStorage.setItem("l2Complete", JSON.stringify(l2Complete));
-            }
-            if (this.level === "level3") {
-                console.log("completed level3");
-                var l3Complete = true;
-                localStorage.setItem("l3Complete", JSON.stringify(l3Complete));
-            }
-            this.scene.start('levelScene');
             
-        }
+        
     }
 }
