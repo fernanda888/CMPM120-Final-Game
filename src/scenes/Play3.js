@@ -130,7 +130,7 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player = new Player(this, 300, 417);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
@@ -222,15 +222,15 @@ class Play3 extends Phaser.Scene {
         this.timeLeft = 30;
 
         // the energy container. A simple sprite
-        this.energyContainer = this.add.sprite(width / 2.5, height / 12, "energycontainer");
+        this.energyContainer = this.add.sprite(width / 2.5, height / 4.5, "energycontainer");
         this.energyContainer.setScale(0.6);
-        this.energyContainer.setOrigin(0, 0.5);
+        this.energyContainer.setOrigin(0, 0.5).setScrollFactor(0);;
 
         // the energy bar. Another simple sprite
         this.energyBar = this.add.sprite(this.energyContainer.x + 70, this.energyContainer.y, "energybar");
         this.energyBar.setScale(0.6);
 
-        this.energyBar.setOrigin(0, 0.5);
+        this.energyBar.setOrigin(0, 0.5).setScrollFactor(0);
 
         // a boring timer.
         this.gameTimer = this.time.addEvent({
