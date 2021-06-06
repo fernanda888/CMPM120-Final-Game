@@ -4,6 +4,12 @@ class Play2 extends Phaser.Scene {
     }
 
     create() {
+        //reset found keys
+        foundKey1 = false;
+        foundKey2 = false;
+        foundKey3 = false;
+        
+        this.scene.start('puzzle1Scene', "level2");
         //variables
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
@@ -87,8 +93,8 @@ class Play2 extends Phaser.Scene {
     }
 
     addSounds() {
-         //set up sounds
-         this.walking_sound = this.sound.add('walking', {
+        //set up sounds
+        this.walking_sound = this.sound.add('walking', {
             mute: false,
             loop: true,
             rate: 7,
@@ -114,7 +120,7 @@ class Play2 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
-        this.songL2 = this.sound.add('musicL1', { 
+        this.songL2 = this.sound.add('musicL1', {
             mute: false,
             loop: true,
             rate: .95,
@@ -396,7 +402,7 @@ class Play2 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    var destroyTow=this.towers.getFirstAlive();
+                    var destroyTow = this.towers.getFirstAlive();
                     destroyTow.destroy();
                     this.currentTowers--;
                 }

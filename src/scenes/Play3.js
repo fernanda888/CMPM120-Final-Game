@@ -4,6 +4,11 @@ class Play3 extends Phaser.Scene {
     }
 
     create() {
+        //reset found keys
+        foundKey1 = false;
+        foundKey2 = false;
+        foundKey3 = false;
+        
         //variables
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
