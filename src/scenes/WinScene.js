@@ -2,11 +2,15 @@ class WinScene extends Phaser.Scene {
     constructor() {
         super('winScene');
     }
-    preload() {
-        this.load.image('winScreen', 'assets/winScreen.png');
-    }
 
     create(screen) {
+        this.winMusic = this.sound.add('winMusic', { 
+            mute: false,
+            loop: false,
+            rate: 1.05,
+            volume: 0.1
+        });
+        this.winMusic.play();
         //winScreen
         var win = this.add.image(game.config.width,
             game.config.height, 'winScreen');
@@ -40,10 +44,12 @@ class WinScene extends Phaser.Scene {
     update() {
         if (cont == true) {
             cont = false;
+            this.sound.removeAll();
             this.scene.start(this.screen);
         }
         else if (quit == true) {
             quit = false;
+            this.sound.removeAll();
             this.scene.start('titleScene');
         }
     }
