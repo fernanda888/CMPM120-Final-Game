@@ -50,6 +50,22 @@ class LevelScene extends Phaser.Scene {
         this.buttonSetup(this.playButton2);
         this.buttonSetup(this.playButton3);
 
+        this.playButton1.on('pointerdown', () => { 
+            this.scene.start('playScene');
+        });
+
+        if (this.l1) {
+            this.playButton2.on('pointerdown', () => { 
+                this.scene.start('play2Scene');
+            });
+        }
+
+        if (this.l2) {
+            this.playButton3.on('pointerdown', () => { 
+                this.scene.start('play3Scene');
+            });
+        } 
+
     }
     buttonSetup(button){
         button.rotation = -0.8;
@@ -68,21 +84,6 @@ class LevelScene extends Phaser.Scene {
         this.fgClouds.tilePositionX -= scrollSpeed/4;
         this.bgMountains.tilePositionX += scrollSpeed/6;
 
-        this.playButton1.on('pointerdown', () => { 
-            this.scene.start('playScene');
-        });
-
-        if (this.l1) {
-            this.playButton2.on('pointerdown', () => { 
-                this.scene.start('play2Scene');
-            });
-        }
-
-        if (this.l2) {
-            this.playButton3.on('pointerdown', () => { 
-                this.scene.start('play3Scene');
-            });
-        } 
         
     }
 }
