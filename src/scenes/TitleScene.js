@@ -5,7 +5,7 @@ class TitleScene extends Phaser.Scene {
 
     create() {
         this.createBackground();
-        this.createBgStory();
+        this.createSounds();
         this.createPlayButton();
         // this.time.delayedCall(17000, () => {
             
@@ -14,23 +14,46 @@ class TitleScene extends Phaser.Scene {
     }
 
     createBackground() {
-        //title
-        var img = this.add.image(game.config.width,
-            game.config.height, 'titleScreen');
-        img.scale = 1
-        img.setOrigin(1, 1);
-        this.add.image(game.config.width, game.config.height, 'fgClouds').setOrigin(1, 1);
+        //the sprites and movement
+        this.add.image(game.config.width, game.config.height, 'sky').setOrigin(1,1);
+        this.bgClouds = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'bgClouds').setOrigin(0, 0);
+        this.fgClouds = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'fgClouds').setOrigin(0, 0);
+        this.bgMountains = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'bgMountains').setOrigin(0, 0);
+        this.fgMountains = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'fgMountains').setOrigin(0, 0);
+        this.credits = this.add.image(game.config.width, game.config.height, 'titleCredits').setOrigin(1,1);
+    }
+
+    createSounds(){
+        //sounds for the level clicking actions
+        this.key_sound = this.sound.add('keySound', {
+            mute: false,
+            volume: .2,
+        });
     }
 
     createPlayButton() {
         //button play
+        var state = 0;
         var playButton = this.add.image(game.config.width,
             game.config.height, 'playButton');
         playButton.scale = 1;
-        playButton.setOrigin(2, 3);
+        playButton.setOrigin(2, 4.7);
         playButton.setInteractive();
         playButton.on('pointerdown', () => {
-            this.clickButton();
+            if(state==0){
+                this.key_sound.play();
+                playButton.setOrigin(2, 3);
+                state+=1;
+                this.credits.destroy();
+                this.createBgStory();
+           }else if(state==1){
+                this.key_sound.play();
+                this.scene.start('levelScene');
+           }
         });
     }
 
@@ -62,5 +85,10 @@ class TitleScene extends Phaser.Scene {
             repeat: length - 1,
             delay: 20
         })
+    }
+    update(){
+        this.bgClouds.tilePositionX -= scrollSpeed/8;
+        this.fgClouds.tilePositionX -= scrollSpeed/4;
+        this.bgMountains.tilePositionX += scrollSpeed/6;
     }
 }

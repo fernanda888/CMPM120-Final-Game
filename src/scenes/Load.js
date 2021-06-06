@@ -17,6 +17,14 @@ class Load extends Phaser.Scene {
         this.load.image('button1', 'button1.png');
         this.load.image('button2', 'button2.png');
         this.load.image('button3', 'button3.png');
+        this.load.image('titleCredits', 'titleCredits.png');
+        this.load.image('scroll1', 'scroll1.png');
+        this.load.image('scroll2', 'scroll2.png');
+        this.load.image('scroll3', 'scroll3.png');
+        this.load.image('scroll4', 'scroll4.png');
+        this.load.image('scroll5', 'scroll5.png');
+        this.load.image('restartButton', 'restartButton.png');
+        this.load.image('quitButton', 'quitButton2.png');
 
         //load sounds
          this.load.audio('jumping', 'jumping.mp3');
@@ -44,7 +52,7 @@ class Load extends Phaser.Scene {
          this.load.image('borderH', 'borderH.png');
          this.load.image('keyFrame', 'keyFrame.png');
          this.load.image('towerFrame', 'towerFrame.png');
-         this.load.image('lock', 'lock.jpeg');
+         this.load.image('lock', 'lock.png');
          this.load.spritesheet('charRun', 'characterRun.png', {
              frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
          });

@@ -1,17 +1,17 @@
-class EndScene extends Phaser.Scene {
+class WinScene extends Phaser.Scene {
     constructor() {
-        super('endScreen');
+        super('winScene');
     }
     preload() {
-        this.load.image('endScreen', 'assets/endScreen.png');
+        this.load.image('winScreen', 'assets/winScreen.png');
     }
 
     create(screen) {
-        //endScreen
-        var end = this.add.image(game.config.width,
-            game.config.height, 'endScreen');
-        end.scale = 1
-        end.setOrigin(1, 1);
+        //winScreen
+        var win = this.add.image(game.config.width,
+            game.config.height, 'winScreen');
+        win.scale = 1
+        win.setOrigin(1, 1);
 
         //button restart
         this.screen = screen;

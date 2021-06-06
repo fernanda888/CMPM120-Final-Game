@@ -29,7 +29,7 @@ class Play3 extends Phaser.Scene {
         this.addCharacter();
         this.addAnimation();
         this.addSprites();
-        this.addBorder();
+        //this.addBorder();
         this.addDoor();
         this.spawnL2Enemies();
         this.addBlocks();
@@ -201,7 +201,7 @@ class Play3 extends Phaser.Scene {
 
         //add powerUP
         const PUspawn = this.map.findObject('Spawn', obj => obj.name === 'powerUp3');
-        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp3').setScale(0.1);
+        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp3').setScale(1);
         this.powerUp.body.allowGravity = false;
         this.physics.add.overlap(this.powerUp, this.player, () => {
             this.powerUp.destroy();
@@ -376,12 +376,12 @@ class Play3 extends Phaser.Scene {
             this.physics.add.collider(this.player, this.terrainGroup);
             this.physics.add.collider(this.player, this.borderH);
             this.physics.add.collider(this.player, this.door, () => {
+                this.scene.start('winScene', "play3Scene");
                 this.player.destroyed = true;
                 this.player.destroy();
                 this.sound.removeAll();
                 console.log("player finished");
                 this.currentTowers = 0;
-                this.scene.start('puzzle1Scene', "level3");
             });
 
             // this.physics.add.collider(this.door, this.l1EnemyGroup,
