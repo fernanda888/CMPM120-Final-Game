@@ -469,11 +469,9 @@ class Play extends Phaser.Scene {
             this.physics.add.collider(this.towers, this.terrainLayer);
             this.physics.add.collider(this.towers, this.player);
             this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy, tower) => {
-                if (enemy.body.touching.up && tower.body.touching.down) {
                     console.log("squish enemy");
                     this.enemy_kill.play();
                     enemy.destroy();
-                }
                 
             });
             this.physics.add.overlap(this.towers, this.terrainGroup, (obj1, obj2) => {

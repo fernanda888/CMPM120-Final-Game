@@ -8,8 +8,8 @@ class Play2 extends Phaser.Scene {
         foundKey1 = false;
         foundKey2 = false;
         foundKey3 = false;
-        
-        this.scene.start('puzzle1Scene', "level2");
+
+        //this.scene.start('puzzle1Scene', "level2");
         //variables
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second

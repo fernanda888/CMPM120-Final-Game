@@ -222,19 +222,15 @@ class Play3 extends Phaser.Scene {
         this.timeLeft = 30;
 
         // the energy container. A simple sprite
-        let energyContainer = this.add.sprite(game.config.width / 2, game.config.height / 2, "energycontainer");
+        this.energyContainer = this.add.sprite(width / 2.5, height / 12, "energycontainer");
+        this.energyContainer.setScale(0.6);
+        this.energyContainer.setOrigin(0, 0.5);
 
         // the energy bar. Another simple sprite
-        let energyBar = this.add.sprite(energyContainer.x + 46, energyContainer.y, "energybar");
+        this.energyBar = this.add.sprite(this.energyContainer.x + 70, this.energyContainer.y, "energybar");
+        this.energyBar.setScale(0.6);
 
-        // a copy of the energy bar to be used as a mask. Another simple sprite but...
-        this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
-
-        // ...it's not visible...
-        this.energyMask.visible = false;
-
-        // and we assign it as energyBar's mask.
-        energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
+        this.energyBar.setOrigin(0, 0.5);
 
         // a boring timer.
         this.gameTimer = this.time.addEvent({
@@ -242,13 +238,9 @@ class Play3 extends Phaser.Scene {
             callback: function () {
                 this.timeLeft--;
 
-                // dividing enery bar width by the number of seconds gives us the amount
-                // of pixels we need to move the energy bar each second
-                let stepWidth = this.energyMask.displayWidth / 30;
-
-                // moving the mask
-                this.energyMask.x -= stepWidth;
                 if (this.timeLeft == 0) {
+                    this.energyContainer.destroy();
+                    this.energyBar.destroy();
                     this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
                         this.player.destroyed = true;
                         this.player.destroy();
@@ -258,6 +250,7 @@ class Play3 extends Phaser.Scene {
                         this.scene.start('endScreen', "play3Scene");
                     });
                 }
+                this.energyBar.setScale((this.timeLeft / 30) * 0.6, 0.6);
             },
             callbackScope: this,
             loop: true
