@@ -160,14 +160,12 @@ class Play extends Phaser.Scene {
     }
 
     addInstructions() {
-        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
-            ' move and the up arrow key to jump. Use the spacebar to build ' +
-            'towers to reach greater heights!', {
-            fontFamily: 'Courier', fontSize: '20px',
-            color: '#fff', lineSpacing: 10, wordWrap: { width: width / 3, },
-        });
+        this.add.image(130, 4600, 'scroll1').setScale(.75).setOrigin(0,0);
+        this.add.image(600, 4500, 'scroll2').setScale(.75).setOrigin(0,0);
+        this.add.image(1000, 4250, 'scroll3').setScale(.75).setOrigin(0,0);
+        this.add.image(580, 4000, 'scroll5').setScale(.75).setOrigin(0,0);
+        this.add.image(1000, 4000, 'scroll4').setScale(.75).setOrigin(0,0);
     }
-
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
 
@@ -375,6 +373,7 @@ class Play extends Phaser.Scene {
                 playerWalking = true;
                 this.player.setFlip(true, false);
                 facingRight = false;
+                console.log(this.player.x, this.player.y);
             } else if (cursors.right.isDown) {  //right arrow key down
                 this.player.body.setAccelerationX(this.ACCELERATION);
                 playerWalking = true;

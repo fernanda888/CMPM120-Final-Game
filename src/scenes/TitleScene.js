@@ -5,8 +5,8 @@ class TitleScene extends Phaser.Scene {
 
     create() {
         this.createBackground();
-        this.createBgStory();
-        this.createPlayButton();
+        this.createSounds();
+        this.createPlayButton1();
         // this.time.delayedCall(17000, () => {
             
         // });
@@ -14,32 +14,49 @@ class TitleScene extends Phaser.Scene {
     }
 
     createBackground() {
-        //title
-        var img = this.add.image(game.config.width,
-            game.config.height, 'titleScreen');
-        img.scale = 1
-        img.setOrigin(1, 1);
-        this.add.image(game.config.width, game.config.height, 'fgClouds').setOrigin(1, 1);
+        this.add.image(game.config.width, game.config.height, 'sky').setOrigin(1,1);
+        this.bgClouds = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'bgClouds').setOrigin(0, 0);
+        this.fgClouds = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'fgClouds').setOrigin(0, 0);
+        this.bgMountains = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'bgMountains').setOrigin(0, 0);
+        this.fgMountains = this.add.tileSprite(0, 0, game.config.width, 
+            game.config.height, 'fgMountains').setOrigin(0, 0);
+        this.credits = this.add.image(game.config.width, game.config.height, 'titleCredits').setOrigin(1,1);
     }
-
-    createPlayButton() {
-        //button play
-        var playButton = this.add.image(game.config.width,
-            game.config.height, 'playButton');
-        playButton.scale = 1;
-        playButton.setOrigin(2, 3);
-        playButton.setInteractive();
-        playButton.on('pointerdown', () => {
-            this.clickButton();
+    createSounds(){
+        this.key_sound = this.sound.add('keySound', {
+            mute: false,
+            volume: .2,
         });
     }
 
-    clickButton() {
-        this.scene.start('levelScene');
+    createPlayButton1() {
+        //button play and the credits title screen
+        
+        var state = 0;
+        var playButton = this.add.image(game.config.width,
+            game.config.height, 'playButton');
+        playButton.scale = 1;
+        playButton.setOrigin(2, 4.7);
+        playButton.setInteractive();
+        playButton.on('pointerdown', () => {
+           if(state==0){
+                this.key_sound.play();
+                playButton.setOrigin(2, 3);
+                state+=1;
+                this.credits.destroy();
+                this.createBgStory();
+           }else if(state==1){
+                this.key_sound.play();
+                this.scene.start('levelScene');
+           }
+        });
     }
 
     createBgStory() {
-        this.label = this.add.text(width/4, height/4, '', {font: '40px TypeReg', fill: '#000000', wordWrap: {width: width/1.5}});
+        this.label = this.add.text(width/4, height/3, '', {font: '40px TypeReg', fill: '#000000', wordWrap: {width: width/1.5}});
         this.storyText = 'Greetings! You have been chosen to complete a challenging, treacherous quest. Many have failed before, but you have been chosen for your highly qualified skillset and strength. Your quest, should you accept it or not, is to advance the Treasure Tower. Each floor, or level, of the tower hold a treasure, but the treasure is protected by dangerous enemies on each floor. Should you defeat the enemies and obtain the treasures in each level, you will be rewarded with a large sum of the treasure!';
         this.typewriterTextWrapped(this.storyText);
     }
@@ -62,5 +79,10 @@ class TitleScene extends Phaser.Scene {
             repeat: length - 1,
             delay: 20
         })
+    }
+    update(){
+        this.bgClouds.tilePositionX -= scrollSpeed/8;
+        this.fgClouds.tilePositionX -= scrollSpeed/4;
+        this.bgMountains.tilePositionX += scrollSpeed/6;
     }
 }
