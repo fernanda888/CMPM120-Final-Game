@@ -237,7 +237,7 @@ class Play3 extends Phaser.Scene {
         this.energyContainer.setOrigin(0, 0.5).setScrollFactor(0);;
 
         // the energy bar. Another simple sprite
-        this.energyBar = this.add.sprite(this.energyContainer.x + 70, this.energyContainer.y, "energybar");
+        this.energyBar = this.add.sprite(this.energyContainer.x, this.energyContainer.y, "energybar");
         this.energyBar.setScale(0.6);
 
         this.energyBar.setOrigin(0, 0.5).setScrollFactor(0);
@@ -261,6 +261,7 @@ class Play3 extends Phaser.Scene {
                     });
                 }
                 this.energyBar.setScale((this.timeLeft / 30) * 0.6, 0.6);
+                this.energyBar.x+=2.5;
             },
             callbackScope: this,
             loop: true
