@@ -285,7 +285,7 @@ class Play extends Phaser.Scene {
                 this.player.destroy();
                 console.log("player destroyed");
                 //change scene to end game
-                this.scene.start('endScreen');
+                this.scene.start('endScreen', "playScene");
             });
 
             this.physics.add.collider(this.player, this.door, () => {
@@ -356,10 +356,10 @@ class Play extends Phaser.Scene {
 
     update() {
         if (!this.player.destroyed){
-        this.playSounds();
-        this.keyDetection();
-        this.jumpingLogic();
-        this.cameraMovement();
+            this.playSounds();
+            this.keyDetection();
+            this.jumpingLogic();
+            this.cameraMovement();
         }
 
     }
@@ -484,6 +484,5 @@ class Play extends Phaser.Scene {
     enemyCollision(){
         this.song1.destroy();
     }
-
     
 }
