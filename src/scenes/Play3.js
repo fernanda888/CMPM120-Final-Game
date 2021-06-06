@@ -8,7 +8,7 @@ class Play3 extends Phaser.Scene {
         foundKey1 = false;
         foundKey2 = false;
         foundKey3 = false;
-        
+
         //variables
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
@@ -43,6 +43,7 @@ class Play3 extends Phaser.Scene {
         this.worldBounds();
 
     }
+
     addAnimation() {
         this.anims.create({
             key: 'run',
@@ -91,8 +92,8 @@ class Play3 extends Phaser.Scene {
     }
 
     addSounds() {
-         //set up sounds
-         this.walking_sound = this.sound.add('walking', {
+        //set up sounds
+        this.walking_sound = this.sound.add('walking', {
             mute: false,
             loop: true,
             rate: 7,
@@ -129,7 +130,7 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player = new Player(this, 300, 417);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
@@ -210,9 +211,86 @@ class Play3 extends Phaser.Scene {
         this.powerUp.body.allowGravity = false;
         this.physics.add.overlap(this.powerUp, this.player, () => {
             this.powerUp.destroy();
+            this.addInvincibilityTimer();
+
             //get invincibility
             this.enemyCollider.destroy();
         });
+    }
+
+    addInvincibilityTimer() {
+        this.timeLeft = 30;
+
+        // the energy container. A simple sprite
+        let energyContainer = this.add.sprite(game.config.width / 2, game.config.height / 2, "energycontainer");
+
+        // the energy bar. Another simple sprite
+        let energyBar = this.add.sprite(energyContainer.x + 46, energyContainer.y, "energybar");
+
+        // a copy of the energy bar to be used as a mask. Another simple sprite but...
+        this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
+
+        // ...it's not visible...
+        this.energyMask.visible = false;
+
+        // and we assign it as energyBar's mask.
+        energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
+
+        // a boring timer.
+        this.gameTimer = this.time.addEvent({
+            delay: 1000,
+            callback: function () {
+                this.timeLeft--;
+
+                // dividing enery bar width by the number of seconds gives us the amount
+                // of pixels we need to move the energy bar each second
+                let stepWidth = this.energyMask.displayWidth / 30;
+
+                // moving the mask
+                this.energyMask.x -= stepWidth;
+                if (this.timeLeft == 0) {
+                    this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
+                        this.player.destroyed = true;
+                        this.player.destroy();
+                        this.sound.removeAll();
+                        console.log("player destroyed");
+                        //change scene to end game
+                        this.scene.start('endScreen', "play3Scene");
+                    });
+                }
+            },
+            callbackScope: this,
+            loop: true
+        });
+        // let initialTime = 30;
+        // this.timeLeft = initialTime;
+        // let timerContainer = this.add.sprite(width /2, height/2, "timercontainer");
+        // let timerBar = this.add.sprite(timerContainer.x + 46, timerContainer.y, "timerbar");
+        // this.timerMask = this.add.sprite(timerBar.x, timerBar.y, "timerbar");
+        // this.timerMask.setVisible(false);
+        // timerBar.mask = this.timerMask.createBitmapMask();
+        // this.invincibilityTimer = this.time.addEvent({
+        //     delay: 1000,
+        //     callback: () => {
+        //         this.timeLeft--;
+        //         let stepWidth = this.timerMask.displayWidth / initialTime;
+
+        //         this.timerMask.x -= stepWidth;
+        //         if (this.timeLeft == 0) {
+        //             this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
+        //                 this.player.destroyed = true;
+        //                 this.player.destroy();
+        //                 this.sound.removeAll();
+        //                 console.log("player destroyed");
+        //                 //change scene to end game
+        //                 this.scene.start('endScreen', "play3Scene");
+        //             });
+        //         }
+        //     },
+        //     callbackScope: this,
+        //     loop: true
+        // });
+
     }
 
 
@@ -453,7 +531,7 @@ class Play3 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    var destroyTow=this.towers.getFirstAlive();
+                    var destroyTow = this.towers.getFirstAlive();
                     destroyTow.destroy();
                     this.currentTowers--;
                 }

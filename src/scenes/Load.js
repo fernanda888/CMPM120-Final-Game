@@ -48,25 +48,34 @@ class Load extends Phaser.Scene {
          this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100});
          this.load.spritesheet('l2enemy', 'enemyFlying.png', { frameWidth: 250, frameHeight: 230});
 
-         this.load.image('chest', 'chest.png');
-         this.load.image('rock', 'rock1.png');
-         this.load.image('purpleKey', 'purpleKey.png');
-         this.load.image('greenKey', 'greenKey.png');
-         this.load.image('blueKey', 'blueKey.png');
-         this.load.image('powerUp', 'powerUp.png');
-         this.load.image('powerUp3', 'invincibility.png');
-         this.load.image('borderH', 'borderH.png');
-         this.load.image('keyFrame', 'keyFrame.png');
-         this.load.image('towerFrame', 'towerFrame.png');
-         this.load.image('lock', 'lock.png');
-         this.load.spritesheet('charRun', 'characterRun.png', {
-             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
-         });
-         this.load.spritesheet('charTower', 'characterTower.png', {
-             frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 5
-         });
+        //load images
+        this.load.image('character', 'character.png');
+        this.load.image('characterJump', 'characterJump.png');
+        this.load.image('tower', 'tower.png');
+        this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100 });
+        this.load.spritesheet('l2enemy', 'enemyFlying.png', { frameWidth: 250, frameHeight: 230 });
+        this.load.image("energycontainer", "energycontainer.png");
+        this.load.image("energybar", "energybar.png");
 
-         //load the json images 
+        this.load.image('chest', 'chest.png');
+        this.load.image('rock', 'rock1.png');
+        this.load.image('purpleKey', 'purpleKey.png');
+        this.load.image('greenKey', 'greenKey.png');
+        this.load.image('blueKey', 'blueKey.png');
+        this.load.image('powerUp', 'powerUp.png');
+        this.load.image('powerUp3', 'invincibility.png');
+        this.load.image('borderH', 'borderH.png');
+        this.load.image('keyFrame', 'keyFrame.png');
+        this.load.image('towerFrame', 'towerFrame.png');
+        this.load.image('lock', 'lock.png');
+        this.load.spritesheet('charRun', 'characterRun.png', {
+            frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 7
+        });
+        this.load.spritesheet('charTower', 'characterTower.png', {
+            frameWidth: 600, frameHeight: 600, startFrame: 0, endFrame: 5
+        });
+
+        //load the json images 
         this.load.image('tiles', 'rockSheetNew.png');
         this.load.tilemapTiledJSON("tilemapJSON", "levelOneNew.json");
 
