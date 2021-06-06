@@ -114,6 +114,13 @@ class Play2 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        this.songL1 = this.sound.add('musicL1', { 
+            mute: false,
+            loop: true,
+            rate: .95,
+            volume: 0.01
+        });
+        this.songL1.play();
     }
 
     addInstructions() {
@@ -321,8 +328,7 @@ class Play2 extends Phaser.Scene {
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
+                this.sound.removeAll();
                 console.log("player finished");
                 this.currentTowers = 0;
                 this.scene.start('puzzle1Scene', "level2");
@@ -351,8 +357,7 @@ class Play2 extends Phaser.Scene {
             this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
+                this.sound.removeAll();
                 console.log("player destroyed");
                 //change scene to end game
                 this.scene.start('endScreen', "play2Scene");

@@ -2,7 +2,6 @@ class Play extends Phaser.Scene {
     constructor() {
         super('playScene');
     }
-        
 
     create() {
         //variables
@@ -123,13 +122,7 @@ class Play extends Phaser.Scene {
 
     addSounds() {
         // set up music
-        this.song1 = this.sound.add('musicL1', { 
-            mute: false,
-            volume: 0.03,
-            rate: 1,
-            loop: true 
-        });
-        this.song1.play();
+        
          //set up sounds
          this.walking_sound = this.sound.add('walking', {
             mute: false,
@@ -157,15 +150,24 @@ class Play extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        this.songL1 = this.sound.add('musicL1', { 
+            mute: false,
+            loop: true,
+            rate: .9,
+            volume: 0.015
+        });
+        this.songL1.play();
     }
 
     addInstructions() {
-        this.add.image(130, 4600, 'scroll1').setScale(.75).setOrigin(0,0);
-        this.add.image(600, 4500, 'scroll2').setScale(.75).setOrigin(0,0);
-        this.add.image(1000, 4250, 'scroll3').setScale(.75).setOrigin(0,0);
-        this.add.image(580, 4000, 'scroll5').setScale(.75).setOrigin(0,0);
-        this.add.image(1000, 4000, 'scroll4').setScale(.75).setOrigin(0,0);
+        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
+            ' move and the up arrow key to jump. Use the spacebar to build ' +
+            'towers to reach greater heights!', {
+            fontFamily: 'Courier', fontSize: '20px',
+            color: '#fff', lineSpacing: 10, wordWrap: { width: width / 3, },
+        });
     }
+
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
 
@@ -278,22 +280,21 @@ class Play extends Phaser.Scene {
                     this.changeEnemyDirection(enemy);
                 });
             this.physics.add.collider(this.player, this.l1EnemyGroup, () => {
+                this.sound.removeAll();
                 this.player.destroyed = true;
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
-                this.song1.destroy();
                 console.log("player destroyed");
                 //change scene to end game
-                this.scene.start('endScreen', "playScene");
+                this.scene.start('endScreen');
             });
 
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
+              
                 this.player.destroy();
                 this.jumping_sound.destroy();
                 this.walking_sound.destroy();
-                this.song1.destroy();
+                this.songL1.destroy();
                 console.log("player finished");
                 this.currentTowers=0;
                 this.scene.start('puzzle1Scene', "level1");
@@ -357,23 +358,23 @@ class Play extends Phaser.Scene {
 
 
     update() {
+        if (!this.player.destroyed){
         this.playSounds();
         this.keyDetection();
         this.jumpingLogic();
         this.cameraMovement();
+        }
 
     }
 
     //logic for keys pressed
     keyDetection() {
         //left arrow key down
-        if (!this.player.destroyed) {
             if (cursors.left.isDown) {
                 this.player.body.setAccelerationX(-this.ACCELERATION);
                 playerWalking = true;
                 this.player.setFlip(true, false);
                 facingRight = false;
-                console.log(this.player.x, this.player.y);
             } else if (cursors.right.isDown) {  //right arrow key down
                 this.player.body.setAccelerationX(this.ACCELERATION);
                 playerWalking = true;
@@ -410,7 +411,7 @@ class Play extends Phaser.Scene {
             } else if(!playerWalking && this.player.body.blocked.down && !this.building){
                 this.player.setTexture('character');
             }
-        }
+        
 
     }
 
@@ -425,7 +426,6 @@ class Play extends Phaser.Scene {
 
     //jump logic for player
     jumpingLogic() {
-        if (!this.player.destroyed) {
             // console.log("player's position: ", this.player.x, ": ", this.player.y);
             this.player.isGrounded = this.player.body.blocked.down;
             if (this.player.isGrounded) {
@@ -447,7 +447,7 @@ class Play extends Phaser.Scene {
                 this.jumps--;
                 this.jumping = false;
             }
-        }
+        
 
 
     }
@@ -467,7 +467,6 @@ class Play extends Phaser.Scene {
     }
 
     buildTower() {
-        if (!this.player.destroyed) {
             let tower = new Tower(this, this.player,"red");
             this.towers.add(tower);
             this.tower_sound.play();
@@ -482,8 +481,11 @@ class Play extends Phaser.Scene {
                 this.tile_sound.play();
                 obj2.destroy();
             });
-        }
+        
 
+    }
+    enemyCollision(){
+        this.song1.destroy();
     }
 
     

@@ -113,6 +113,13 @@ class Play3 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        this.songL1 = this.sound.add('musicL1', { 
+            mute: false,
+            loop: true,
+            rate: 1,
+            volume: 0.01
+        });
+        this.songL1.play();
     }
 
     addCharacter() {
@@ -371,8 +378,7 @@ class Play3 extends Phaser.Scene {
             this.physics.add.collider(this.player, this.door, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
+                this.sound.removeAll();
                 console.log("player finished");
                 this.currentTowers = 0;
                 this.scene.start('puzzle1Scene', "level3");
@@ -401,8 +407,7 @@ class Play3 extends Phaser.Scene {
             this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
                 this.player.destroyed = true;
                 this.player.destroy();
-                this.jumping_sound.destroy();
-                this.walking_sound.destroy();
+                this.sound.removeAll();
                 console.log("player destroyed");
                 //change scene to end game
                 this.scene.start('endScreen', "play3Scene");
@@ -443,7 +448,7 @@ class Play3 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    var destroyTow = this.towers.getLast(true);
+                    var destroyTow=this.towers.getFirstAlive();
                     destroyTow.destroy();
                     this.currentTowers--;
                 }
@@ -481,10 +486,10 @@ class Play3 extends Phaser.Scene {
     }
 
     playSounds() {
-        if (cursors.left.isDown && playerWalking == false) {
+        if (cursors.left.isDown && !this.jumping && playerWalking == false) {
             this.walking_sound.play();
         }
-        if (cursors.right.isDown && playerWalking == false) {
+        if (cursors.right.isDown && !this.jumping && playerWalking == false) {
             this.walking_sound.play();
         }
     }
