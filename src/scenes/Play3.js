@@ -443,7 +443,7 @@ class Play3 extends Phaser.Scene {
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
                 if (this.currentTowers == this.MAX_TOW) {
-                    var destroyTow=this.towers.getFirstAlive();
+                    var destroyTow = this.towers.getLast(true);
                     destroyTow.destroy();
                     this.currentTowers--;
                 }
@@ -481,10 +481,10 @@ class Play3 extends Phaser.Scene {
     }
 
     playSounds() {
-        if (cursors.left.isDown && !this.jumping && playerWalking == false) {
+        if (cursors.left.isDown && playerWalking == false) {
             this.walking_sound.play();
         }
-        if (cursors.right.isDown && !this.jumping && playerWalking == false) {
+        if (cursors.right.isDown && playerWalking == false) {
             this.walking_sound.play();
         }
     }
