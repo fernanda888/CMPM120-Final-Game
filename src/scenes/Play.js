@@ -14,9 +14,9 @@ class Play extends Phaser.Scene {
         this.JUMP_VELOCITY = -700;
         this.physics.world.gravity.y = 1600;
         this.spacebar = this.input.keyboard.addKey('SPACE');
-        this.foundKey1 = false;
-        this.foundKey2 = false;
-        this.foundKey3 = false;
+        foundKey1 = false;
+        foundKey2 = false;
+        foundKey3 = false;
         this.currentTowers=0;
 
         // set up Phaser-provided cursor key input
@@ -303,12 +303,14 @@ class Play extends Phaser.Scene {
             });
 
             this.physics.add.collider(this.player, this.door, () => {
-                this.player.destroyed = true;
-                this.sound.removeAll();
-                this.player.destroy();
-                console.log("player finished");
-                this.currentTowers=0;
-                this.scene.start('puzzle1Scene', "level1");
+                if(foundKey1 && foundKey2 && foundKey3){
+                    this.player.destroyed = true;
+                    this.sound.removeAll();
+                    this.player.destroy();
+                    console.log("player finished");
+                    this.currentTowers=0;
+                    this.scene.start('puzzle1Scene', "level1");
+                }
             });
 
         }

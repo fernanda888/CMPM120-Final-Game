@@ -474,12 +474,14 @@ class Play3 extends Phaser.Scene {
             this.physics.add.collider(this.player, this.terrainGroup);
             this.physics.add.collider(this.player, this.borderH);
             this.physics.add.collider(this.player, this.door, () => {
-                this.scene.start('winScene', "play3Scene");
+                if(foundKey1 && foundKey2 && foundKey3){
                 this.player.destroyed = true;
                 this.player.destroy();
                 this.sound.removeAll();
                 console.log("player finished");
                 this.currentTowers = 0;
+                this.scene.start('winScene', "play3Scene");
+                }
             });
 
             // this.physics.add.collider(this.door, this.l1EnemyGroup,
