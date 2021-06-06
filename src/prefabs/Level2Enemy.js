@@ -16,6 +16,7 @@ class L2Enemy extends Phaser.Physics.Arcade.Sprite {
         this.body.checkCollision.right=true; 
         this.body.checkCollision.up=true;             
         this.newEnemy = true;                 // custom property to control Trap spawning
+        this.fly = true;
     }
 
     update() {

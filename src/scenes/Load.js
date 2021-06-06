@@ -52,8 +52,12 @@ class Load extends Phaser.Scene {
         this.load.image('character', 'character.png');
         this.load.image('characterJump', 'characterJump.png');
         this.load.image('tower', 'tower.png');
-        this.load.spritesheet('l1enemy', 'enemyGround.png', { frameWidth: 150, frameHeight: 100 });
-        this.load.spritesheet('l2enemy', 'enemyFlying.png', { frameWidth: 250, frameHeight: 230 });
+        this.load.spritesheet('l1enemy', 'enemyGround', {
+            frameWidth: 152, frameHeight: 102, startFrame: 0, endFrame: 4
+        });
+        this.load.spritesheet('l2enemy', 'enemyFlying', {
+            frameWidth: 252, frameHeight: 252, startFrame: 0, endFrame: 6
+        });
         this.load.image("energycontainer", "energycontainer.png");
         this.load.image("energybar", "energybar.png");
 

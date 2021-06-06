@@ -57,6 +57,16 @@ class Play2 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('charTower', { start: 0, end: 5, first: 0 }),
             frameRate: 12
         });
+        this.anims.create({
+            key: 'fly',
+            frames: this.anims.generateFrameNumbers('l2enemy', { start: 0, end: 6, first: 0 }),
+            frameRate: 12
+        });
+        this.anims.create({
+            key: 'crawl',
+            frames: this.anims.generateFrameNumbers('l1enemy', { start: 0, end: 4, first: 0 }),
+            frameRate: 10
+        });
     }
 
     addBackgroundTileMap() {
@@ -313,6 +323,18 @@ class Play2 extends Phaser.Scene {
             enemy.body.velocity.x = 100;
         } else {
             enemy.body.velocity.x = -100;
+        }
+
+         //add animations for the enemies
+         if (enemy.direction === 'RIGHT') {
+            enemy.body.velocity.x = 100;
+        } else {
+            enemy.body.velocity.x = -100;
+        }
+        if(enemy.fly == true){
+            enemy.anims.play('fly', true);
+        }else if(enemy.fly == false){
+            enemy.anims.play('crawl', true);
         }
     }
 
