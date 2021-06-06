@@ -7,9 +7,6 @@ class TitleScene extends Phaser.Scene {
         this.createBackground();
         this.createSounds();
         this.createPlayButton();
-        // this.time.delayedCall(17000, () => {
-            
-        // });
 
     }
 
@@ -33,6 +30,14 @@ class TitleScene extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        //add music
+        this.menuMusic = this.sound.add('mainMenuMusic', { 
+            mute: false,
+            loop: true,
+            rate: 1.05,
+            volume: 0.4
+        });
+        this.menuMusic.play();
     }
 
     createPlayButton() {
@@ -52,12 +57,14 @@ class TitleScene extends Phaser.Scene {
                 this.createBgStory();
            }else if(state==1){
                 this.key_sound.play();
+                this.sound.removeAll();
                 this.scene.start('levelScene');
            }
         });
     }
 
     clickButton() {
+        this.sound.removeAll();
         this.scene.start('levelScene');
     }
 

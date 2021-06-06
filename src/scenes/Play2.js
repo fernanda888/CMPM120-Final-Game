@@ -120,11 +120,11 @@ class Play2 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
-        this.songL2 = this.sound.add('musicL1', {
+        this.songL2 = this.sound.add('musicL2', { 
             mute: false,
             loop: true,
-            rate: .95,
-            volume: 0.01
+            rate: 1.07,
+            volume: 0.04
         });
         this.songL2.play();
     }

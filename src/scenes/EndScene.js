@@ -7,6 +7,14 @@ class EndScene extends Phaser.Scene {
     }
 
     create(screen) {
+        //add music
+        this.gameOverMusic = this.sound.add('gameOverMusic', { 
+            mute: false,
+            loop: false,
+            rate: 1.00,
+            volume: 0.3
+        });
+        this.gameOverMusic.play();
         //endScreen
         var end = this.add.image(game.config.width,
             game.config.height, 'endScreen');
@@ -40,10 +48,12 @@ class EndScene extends Phaser.Scene {
     update() {
         if (cont == true) {
             cont = false;
+            this.sound.removeAll();
             this.scene.start(this.screen);
         }
         else if (quit == true) {
             quit = false;
+            this.sound.removeAll();
             this.scene.start('titleScene');
         }
     }

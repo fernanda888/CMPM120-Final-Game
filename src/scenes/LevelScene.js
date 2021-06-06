@@ -4,6 +4,14 @@ class LevelScene extends Phaser.Scene {
     }
 
     create(){
+        //add the music
+        this.levelMusic = this.sound.add('levelMusic', { 
+            mute: false,
+            loop: true,
+            rate: 1.05,
+            volume: 0.1
+        });
+        this.levelMusic.play();
         //add the iamges in which they appear in
         this.add.image(game.config.width, game.config.height, 'sky').setOrigin(1,1);
         this.bgClouds = this.add.tileSprite(0, 0, game.config.width, 
@@ -51,17 +59,20 @@ class LevelScene extends Phaser.Scene {
         this.buttonSetup(this.playButton3);
 
         this.playButton1.on('pointerdown', () => { 
+            this.sound.removeAll();
             this.scene.start('playScene');
         });
 
         if (this.l1) {
             this.playButton2.on('pointerdown', () => { 
+                this.sound.removeAll();
                 this.scene.start('play2Scene');
             });
         }
 
         if (this.l2) {
-            this.playButton3.on('pointerdown', () => { 
+            this.playButton3.on('pointerdown', () => {
+                this.sound.removeAll(); 
                 this.scene.start('play3Scene');
             });
         } 

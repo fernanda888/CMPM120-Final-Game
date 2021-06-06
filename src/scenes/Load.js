@@ -27,13 +27,19 @@ class Load extends Phaser.Scene {
         this.load.image('quitButton', 'quitButton2.png');
 
         //load sounds
-         this.load.audio('jumping', 'jumping.mp3');
-         this.load.audio('walking', 'walking_sound.mp3');
-         this.load.audio('musicL1', 'TowerMusic(1).wav');
-         this.load.audio('tileBreak', 'tower.mp3');
-         this.load.audio('tower', 'tower.wav');
-         this.load.audio('keySound', 'keySound.wav');
-         this.load.audio('enemyKill', 'enemyKill.wav');
+        this.load.audio('jumping', 'jumping.mp3');
+        this.load.audio('walking', 'walking_sound.mp3');
+        this.load.audio('musicL1', 'TowerMusic(1).wav');
+        this.load.audio('musicL2', 'TowerMusic(2).wav');
+        this.load.audio('musicL3', 'TowerMusic(3).wav');
+        this.load.audio('tileBreak', 'tower.mp3');
+        this.load.audio('tower', 'tower.wav');
+        this.load.audio('keySound', 'keySound.wav');
+        this.load.audio('enemyKill', 'enemyKill.wav');
+        this.load.audio('mainMenuMusic', 'MainMenu.wav');
+        this.load.audio('gameOverMusic', 'GameOver.wav');
+        this.load.audio('winMusic', 'Ending.wav');
+        this.load.audio('levelMusic', 'Level.wav');
  
          //load images
          this.load.image('character', 'character.png');
