@@ -169,7 +169,7 @@ class Play extends Phaser.Scene {
         this.add.image(600, 4500, 'scroll2').setScale(.75).setOrigin(0,0);
         this.add.image(1000, 4250, 'scroll3').setScale(.75).setOrigin(0,0);
         this.add.image(580, 4000, 'scroll5').setScale(.75).setOrigin(0,0);
-        this.add.image(1000, 4000, 'scroll4').setScale(.75).setOrigin(0,0);
+        this.add.image(1066, 2550, 'scroll4').setScale(.75).setOrigin(0,0);
     }
 
     addCharacter() {
