@@ -140,7 +140,8 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        this.player = new Player(this, 300, 417);
+        //this.player = new Player(this, 300, 417);
+        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
