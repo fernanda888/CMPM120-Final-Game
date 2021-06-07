@@ -1,3 +1,9 @@
+/*
+Treasure Tower
+Group 2
+Sonia Atre, Fernanda Becerra, Brian Zhang
+*/
+
 //global 
 let cursors;
 const SCALE = .5;
