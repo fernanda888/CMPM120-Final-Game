@@ -228,28 +228,28 @@ class Play3 extends Phaser.Scene {
     }
 
     addInvincibilityTimer() {
+        //https://www.emanueleferonato.com/2019/04/24/add-a-nice-time-bar-energy-bar-mana-bar-whatever-bar-to-your-html5-games-using-phaser-3-masks/
         this.timeLeft = 30;
 
-        // the energy container. A simple sprite
-        this.energyContainer = this.add.sprite(width / 2.5, height / 4.5, "energycontainer");
-        this.energyContainer.setScale(0.6);
-        this.energyContainer.setOrigin(0, 0.5).setScrollFactor(0);;
+        // container around bar
+        this.timerContainer = this.add.sprite(width / 2.5, height / 4.5, "energycontainer");
+        this.timerContainer.setScale(0.6);
+        this.timerContainer.setOrigin(0, 0.5).setScrollFactor(0);;
 
-        // the energy bar. Another simple sprite
-        this.energyBar = this.add.sprite(this.energyContainer.x, this.energyContainer.y, "energybar");
-        this.energyBar.setScale(0.6);
+        // the timer bar
+        this.timerBar = this.add.sprite(this.timerContainer.x, this.timerContainer.y, "energybar");
+        this.timerBar.setScale(0.6);
 
-        this.energyBar.setOrigin(0, 0.5).setScrollFactor(0);
+        this.timerBar.setOrigin(0, 0.5).setScrollFactor(0);
 
-        // a boring timer.
         this.gameTimer = this.time.addEvent({
             delay: 1000,
             callback: function () {
                 this.timeLeft--;
 
                 if (this.timeLeft == 0) {
-                    this.energyContainer.destroy();
-                    this.energyBar.destroy();
+                    this.timerContainer.destroy();
+                    this.timerBar.destroy();
                     this.enemyCollider = this.physics.add.collider(this.player, this.l2EnemyGroup, () => {
                         this.player.destroyed = true;
                         this.player.destroy();
@@ -259,8 +259,8 @@ class Play3 extends Phaser.Scene {
                         this.scene.start('endScreen', "play3Scene");
                     });
                 }
-                this.energyBar.setScale((this.timeLeft / 30) * 0.6, 0.6);
-                this.energyBar.x+=2.5;
+                this.timerBar.setScale((this.timeLeft / 30) * 0.6, 0.6);
+                this.timerBar.x+=2.5;
             },
             callbackScope: this,
             loop: true
