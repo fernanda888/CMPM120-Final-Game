@@ -2,6 +2,14 @@
 Treasure Tower
 Group 2
 Sonia Atre, Fernanda Becerra, Brian Zhang
+For visual effects, we really enjoyed implementing the particle effects 
+that spawn when the player unlocks the treasure chest and the timer
+for the invincibility effect.
+For technical aspects, we were able to implement being able to destroy 
+the cracked tiles, which was very difficult for us and we were proud
+to have it work the way it does. The tower, affected by gravity, can be 
+jumped on and fall faster, which is fun to play as the player can essentially
+burrow through cracked tiles on level 3.
 */
 
 //global 
