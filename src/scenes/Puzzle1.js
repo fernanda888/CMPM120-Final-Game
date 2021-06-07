@@ -147,32 +147,43 @@ class Puzzle1 extends Phaser.Scene {
                     });
                     this.add.image(this.chest.x,this.chest.y+128,'openChest').setScale(1.5);
                     this.chest.destroy();
-                    this.time.delayedCall(5000, ()=>{
-                        puzzle1Scene = false;
-                        //storing completion of level bool in local storage
-                        console.log(this.level);
-                        if (this.level === "level1") {
-                            console.log("completed level1");
-                            var l1Complete = true;
-                            localStorage.setItem("l1Complete", JSON.stringify(l1Complete));
-                        }
-                        if (this.level === "level2") {
-                            console.log("completed level2");
-                            var l2Complete = true;
-                            localStorage.setItem("l2Complete", JSON.stringify(l2Complete));
-                        }
-                        if (this.level === "level3") {
-                            console.log("completed level3");
-                            var l3Complete = true;
-                            localStorage.setItem("l3Complete", JSON.stringify(l3Complete));
-                        }
-                        this.scene.start('levelScene');
-                        
+                    
+                    //add skip button
+                    this.skipButton = this.add.text(width/1.2, height/1.2, 'SKIP', {
+                        font: '40px TypeReg', fontStyle: 'underline',
+                        fill: '#fff'
+                    });
+                    this.skipButton.setInteractive();
+                    this.skipButton.on('pointerdown', () => {
+                        this.completeLevel();
+                    })
+                    this.time.delayedCall(5000, () => {
+                        this.completeLevel();
                     });
                 }
             }
-        }
-            
+        }        
         
+    }
+    completeLevel() {
+        puzzle1Scene = false;
+        //storing completion of level bool in local storage
+        console.log(this.level);
+        if (this.level === "level1") {
+            console.log("completed level1");
+            var l1Complete = true;
+            localStorage.setItem("l1Complete", JSON.stringify(l1Complete));
+        }
+        if (this.level === "level2") {
+            console.log("completed level2");
+            var l2Complete = true;
+            localStorage.setItem("l2Complete", JSON.stringify(l2Complete));
+        }
+        if (this.level === "level3") {
+            console.log("completed level3");
+            var l3Complete = true;
+            localStorage.setItem("l3Complete", JSON.stringify(l3Complete));
+        }
+        this.scene.start('levelScene');
     }
 }
