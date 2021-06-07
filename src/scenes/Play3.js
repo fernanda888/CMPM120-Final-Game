@@ -571,7 +571,7 @@ class Play3 extends Phaser.Scene {
                         this.topTower.alpha = 1;
                     }
                     else if (this.MAX_TOW == 2) {
-                        //this.topTower2.alpha = 1;
+                        this.topTower2.alpha = 1;
                     }
                 }
             }
