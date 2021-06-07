@@ -147,7 +147,7 @@ class Puzzle1 extends Phaser.Scene {
                     });
                     this.add.image(this.chest.x,this.chest.y+128,'openChest').setScale(1.5);
                     this.chest.destroy();
-                    this.time.delayedCall(9000, ()=>{
+                    this.time.delayedCall(5000, ()=>{
                         puzzle1Scene = false;
                         //storing completion of level bool in local storage
                         console.log(this.level);
