@@ -96,9 +96,8 @@ class Play2 extends Phaser.Scene {
     addDoor() {
         const doorSpawn = this.map.findObject('Spawn', obj => obj.name === 'doorSpawn');
         this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'chest');
-        this.door.body.allowGravity = false;
-        this.door.body.immovable = true;
-        this.door.body.moves = false;
+        this.door.body.allowGravity = true;
+        this.door.body.pushable = false;
         this.door.setScale(0.1);
     }
 

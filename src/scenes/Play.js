@@ -119,9 +119,8 @@ class Play extends Phaser.Scene {
     addDoor() {
         const doorSpawn = this.map.findObject('Spawn', obj => obj.name === 'doorSpawn');
         this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'chest');
-        this.door.body.allowGravity = false;
-        this.door.body.immovable = true;
-        this.door.body.moves = false;
+        this.door.body.allowGravity = true;
+        this.door.body.pushable = false;
         this.door.setScale(0.1);
     }
 
@@ -488,6 +487,7 @@ class Play extends Phaser.Scene {
             this.physics.add.overlap(this.l1EnemyGroup, this.towers, (enemy, tower) => {
                     console.log("squish enemy");
                     this.enemy_kill.play();
+                    console.log(this.enemy_kill);
                     enemy.destroy();
                 
             });

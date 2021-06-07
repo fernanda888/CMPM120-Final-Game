@@ -95,9 +95,8 @@ class Play3 extends Phaser.Scene {
     addDoor() {
         const doorSpawn = this.map.findObject('Spawn', obj => obj.name === 'doorSpawn');
         this.door = this.physics.add.sprite(doorSpawn.x, doorSpawn.y, 'chest');
-        this.door.body.allowGravity = false;
-        this.door.body.immovable = true;
-        this.door.body.moves = false;
+        this.door.body.allowGravity = true;
+        this.door.body.pushable = false;
         this.door.setScale(0.1);
     }
 
@@ -140,8 +139,7 @@ class Play3 extends Phaser.Scene {
 
     addCharacter() {
         this.p1Spawn = this.map.findObject('Spawn', obj => obj.name === 'p1Spawn');
-        //this.player = new Player(this, 300, 417);
-        this.player = new Player(this, this.p1Spawn.x, this.p1Spawn.y);
+        this.player = new Player(this, 300, 417);
         this.player.body.setSize(300, 600, 25, 50);
         this.player.body.setMaxVelocityY(1000);
     }
