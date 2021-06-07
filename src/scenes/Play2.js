@@ -37,7 +37,6 @@ class Play2 extends Phaser.Scene {
         this.addSprites();
         this.addBorder();
         this.addDoor();
-        this.addInstructions();
         this.spawnL2Enemies();
         this.addBlocks();
         this.addColliders();
@@ -136,15 +135,6 @@ class Play2 extends Phaser.Scene {
             volume: 0.04
         });
         this.songL2.play();
-    }
-
-    addInstructions() {
-        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
-            ' move and the up arrow key to jump. Use the spacebar to build ' +
-            'towers to reach greater heights!', {
-            fontFamily: 'Courier', fontSize: '20px',
-            color: '#fff', lineSpacing: 10, wordWrap: { width: width / 3, },
-        });
     }
 
     addCharacter() {
