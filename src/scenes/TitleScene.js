@@ -26,9 +26,9 @@ class TitleScene extends Phaser.Scene {
 
     createSounds(){
         //sounds for the level clicking actions
-        this.key_sound = this.sound.add('keySound', {
+        this.key_sound = this.sound.add('selectSound', {
             mute: false,
-            volume: .2,
+            volume: .7,
         });
         //add music
         this.menuMusic = this.sound.add('mainMenuMusic', { 
@@ -51,7 +51,7 @@ class TitleScene extends Phaser.Scene {
         playButton.on('pointerdown', () => {
             if(state==0){
                 this.key_sound.play();
-                playButton.setOrigin(2, 3);
+                playButton.setOrigin(2, 2);
                 state+=1;
                 this.credits.destroy();
                 this.createBgStory();
@@ -69,7 +69,8 @@ class TitleScene extends Phaser.Scene {
     }
 
     createBgStory() {
-        this.label = this.add.text(width/4, height/4, '', {font: '40px TypeReg', fill: '#000000', wordWrap: {width: width/1.5}});
+        this.add.image(width/2+57,height/2-43,'scroll').setScale(1);
+        this.label = this.add.text(width/4, height/4, '', {font: '38px TypeReg', fill: '#000000', wordWrap: {width: width/1.7}});
         this.storyText = 'Greetings! You have been chosen to complete a challenging, treacherous quest. Many have failed before, but you have been chosen for your highly qualified skillset and strength. Your quest, should you accept it or not, is to advance the Treasure Tower. Each floor, or level, of the tower holds a treasure, but the treasure is protected by dangerous enemies on each floor. Should you defeat the enemies and obtain the treasures in each level, you will be rewarded with a large sum of the treasure!';
         this.typewriterTextWrapped(this.storyText);
     }

@@ -10,12 +10,13 @@ class Puzzle1 extends Phaser.Scene {
             rate: 1,
             volume: 0.4
         });
-        this.keySound = this.sound.add('keySound', { 
+        this.keySound = this.sound.add('powerUpSound', { 
             mute: false,
             loop: false,
             rate: 1,
-            volume: 0.05
+            volume: 0.4
         });
+        
 
         
 
@@ -35,6 +36,13 @@ class Puzzle1 extends Phaser.Scene {
         //add background
         this.backG=this.add.image(width/2, height/2, 'puzzleBack');
         this.backG.setScale(2.5);
+
+        //add instructions
+        if(level1){
+            this.add.image(width/4, height/6,'scroll').setScale(.5);
+            this.add.text(width/8.5, height/7, 'Use spacebar to insert keys',{font: '38px TypeReg', fill: '#000000', wordWrap: {width: width/3}});
+        }
+
 
         //add treasure chest
         this.chest = this.physics.add.sprite(width/2, height/2+190, 'chest');
@@ -98,6 +106,7 @@ class Puzzle1 extends Phaser.Scene {
                 this.keySound.play();
                 this.selectRect.x=this.rect2.x;
                 this.selectRect.y=this.rect2.y;
+                this.topkey1.alpha=.5;
             }
             else if(foundKey2 && !this.blueKey){
                 this.blueKey=true;
@@ -105,6 +114,7 @@ class Puzzle1 extends Phaser.Scene {
                 this.keySound.play();
                 this.selectRect.x=this.rect3.x;
                 this.selectRect.y=this.rect3.y;
+                this.topkey2.alpha=.5;
             }
             else if(foundKey3 && !this.greenKey){
                 this.greenKey=true;
@@ -112,6 +122,7 @@ class Puzzle1 extends Phaser.Scene {
                 this.keySound.play();
                 this.flashing.stop();
                 this.selectRect.destroy();
+                this.topkey3.alpha=.5;
                 //if found all the keys
                 if(this.purpleKey && this.blueKey && this.greenKey){
                     this.puzzleEnd.play();

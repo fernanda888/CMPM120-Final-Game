@@ -11,6 +11,7 @@ class Play2 extends Phaser.Scene {
 
         //this.scene.start('puzzle1Scene', "level2");
         //variables
+        level1=false;
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 5000;
@@ -37,6 +38,7 @@ class Play2 extends Phaser.Scene {
         this.addSprites();
         this.addBorder();
         this.addDoor();
+        this.addInstructions();
         this.spawnL2Enemies();
         this.addBlocks();
         this.addColliders();
@@ -128,6 +130,10 @@ class Play2 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        this.powerUp_sound = this.sound.add('powerUpSound', {
+            mute: false,
+            volume: .4
+        });
         this.songL2 = this.sound.add('musicL2', { 
             mute: false,
             loop: true,
@@ -135,6 +141,15 @@ class Play2 extends Phaser.Scene {
             volume: 0.04
         });
         this.songL2.play();
+    }
+
+    addInstructions() {
+        this.add.text(200, 500, 'Instructions: use right and left arrow keys to' +
+            ' move and the up arrow key to jump. Use the spacebar to build ' +
+            'towers to reach greater heights!', {
+            fontFamily: 'Courier', fontSize: '20px',
+            color: '#fff', lineSpacing: 10, wordWrap: { width: width / 3, },
+        });
     }
 
     addCharacter() {
@@ -205,10 +220,11 @@ class Play2 extends Phaser.Scene {
         this.towerExists = this.MAX_TOW;
         //add powerUP
         const PUspawn = this.map.findObject('Spawn', obj => obj.name === 'powerUp');
-        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.05);
+        this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp').setScale(0.1);
         this.powerUp.body.allowGravity = false;
         this.physics.add.overlap(this.powerUp, this.player, () => {
             this.powerUp.destroy();
+            this.powerUp_sound.play();
             this.MAX_TOW = 2;
             this.topTower2 = this.add.image(width / 3.8, height / 4.5, 'tower').setScale(0.10).setScrollFactor(0);
         });
@@ -228,6 +244,9 @@ class Play2 extends Phaser.Scene {
 
         this.border3 = this.addBlock(1303, 1867);
         this.borderGroup.add(this.border3);
+
+        this.border4 = this.addBlock(1127, 3767);
+        this.borderGroup.add(this.border4);
 
         // this.border4 = this.addBlock(995, 4470);
         // this.borderGroup.add(this.border4);
@@ -263,6 +282,8 @@ class Play2 extends Phaser.Scene {
         this.enemy2Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy2');
         this.enemy3Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy3');
         this.enemy4Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy4');
+        this.enemy5Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy5');
+        this.enemy6Spawn = this.map.findObject('Spawn', obj => obj.name === 'flyingEnemy6');
 
         if (!this.jumping) {
             console.log("adding level 1 enemy:");
@@ -282,6 +303,14 @@ class Play2 extends Phaser.Scene {
             let enemy4 = new L2Enemy(this, -100 - speedVariance, this.enemy4Spawn.x, this.enemy4Spawn.y);
             enemy4.name = "enemy4";
             this.l2EnemyGroup.add(enemy4);
+
+            let enemy5 = new L2Enemy(this, -100 - speedVariance, this.enemy5Spawn.x, this.enemy5Spawn.y);
+            enemy5.name = "enemy5";
+            this.l2EnemyGroup.add(enemy5);
+
+            let enemy6 = new L2Enemy(this, -100 - speedVariance, this.enemy6Spawn.x, this.enemy6Spawn.y);
+            enemy6.name = "enemy6";
+            this.l2EnemyGroup.add(enemy6);
 
         }
 
@@ -402,19 +431,23 @@ class Play2 extends Phaser.Scene {
                 playerWalking = true;
                 this.player.setFlip(true, false);
                 facingRight = false;
+                this.building=false;
             } else if (cursors.right.isDown) {  //right arrow key down
                 this.player.body.setAccelerationX(this.ACCELERATION);
                 playerWalking = true;
                 this.player.resetFlip();
                 facingRight = true;
+                this.building=false;
             } else if (!this.spacebar.isDown && !cursors.down.isDown) {
                 //set acceleration to 0 so drag will take over
                 this.player.body.setAccelerationX(0);
                 this.walking_sound.stop();
                 playerWalking = false;
                 this.player.body.setDragX(this.DRAG);
+                this.building=false;
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
+                this.building=true;
                 if (this.currentTowers == this.MAX_TOW) {
                     var destroyTow = this.towers.getFirstAlive();
                     destroyTow.destroy();
@@ -442,6 +475,7 @@ class Play2 extends Phaser.Scene {
                         this.topTower2.alpha = 1;
                     }
                 }
+                this.building=false;
             }
 
             if (playerWalking && this.player.body.blocked.down) {
@@ -477,6 +511,7 @@ class Play2 extends Phaser.Scene {
             if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
+                this.building=false;
                 this.jumping_sound.play();
                 this.player.setTexture('characterJump');
             }

@@ -320,7 +320,7 @@
   <object id="5" name="flyingEnemy3" x="511.405" y="1677.37">
    <point/>
   </object>
-  <object id="6" name="enemy3" x="135.597" y="1856.35">
+  <object id="6" name="flyingEnemy5" x="135.597" y="1856.35">
    <point/>
   </object>
   <object id="7" name="doorSpawn" x="1850.98" y="869.206">
@@ -332,7 +332,7 @@
   <object id="9" name="flyingEnemy2" x="155.881" y="2923.75">
    <point/>
   </object>
-  <object id="10" name="enemy1" x="1526.32" y="3740.9">
+  <object id="10" name="flyingEnemy6" x="1526.32" y="3740.9">
    <point/>
   </object>
   <object id="11" name="flyingEnemy1" x="1369.36" y="2857.84">

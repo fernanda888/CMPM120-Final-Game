@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
 
     create() {
         //variables
+        level1=true;
         this.ACCELERATION = 1500;
         this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 5000;
@@ -387,19 +388,23 @@ class Play extends Phaser.Scene {
                 playerWalking = true;
                 this.player.setFlip(true, false);
                 facingRight = false;
+                this.building=false;
             } else if (cursors.right.isDown) {  //right arrow key down
                 this.player.body.setAccelerationX(this.ACCELERATION);
                 playerWalking = true;
                 this.player.resetFlip();
                 facingRight = true;
+                this.building=false;
             }  else if (!this.spacebar.isDown && !cursors.down.isDown){
                 //set acceleration to 0 so drag will take over
                 this.player.body.setAccelerationX(0);
                 this.walking_sound.stop();
                 playerWalking = false;
                 this.player.body.setDragX(this.DRAG);
+                this.building=false;
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
+                this.building=true;
                 if(this.currentTowers==this.MAX_TOW){
                     this.towers.clear(true,true);
                     this.currentTowers=0;
@@ -416,6 +421,7 @@ class Play extends Phaser.Scene {
                     this.currentTowers--;
                     this.topTower.alpha=1;
                 }
+                this.building=false;
             }
             
             if(playerWalking && this.player.body.blocked.down){
@@ -450,6 +456,7 @@ class Play extends Phaser.Scene {
             if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
+                this.building=false;
                 this.jumping_sound.play();
                 this.player.setTexture('characterJump');
             }

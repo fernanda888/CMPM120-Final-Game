@@ -25,6 +25,7 @@ class Load extends Phaser.Scene {
         this.load.image('scroll5', 'scroll5.png');
         this.load.image('restartButton', 'restartButton.png');
         this.load.image('quitButton', 'quitButton2.png');
+        this.load.image('scroll', 'scroll.png');
 
         //load sounds
         this.load.audio('jumping', 'jumping.mp3');
@@ -40,6 +41,9 @@ class Load extends Phaser.Scene {
         this.load.audio('gameOverMusic', 'GameOver.wav');
         this.load.audio('winMusic', 'Ending.wav');
         this.load.audio('levelMusic', 'Level.wav');
+        this.load.audio('powerUpSound', 'powerUp.wav');
+        this.load.audio('selectSound', 'select.wav');
+        this.load.audio('insertSound', 'insert.wav');
  
          //load images
          this.load.image('character', 'character.png');

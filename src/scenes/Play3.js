@@ -128,6 +128,10 @@ class Play3 extends Phaser.Scene {
             mute: false,
             volume: .2,
         });
+        this.powerUp_sound = this.sound.add('powerUpSound', {
+            mute: false,
+            volume: .4
+        });
         this.songL3 = this.sound.add('musicL3', { 
             mute: false,
             loop: true,
@@ -219,6 +223,7 @@ class Play3 extends Phaser.Scene {
         this.powerUp = this.physics.add.sprite(PUspawn.x, PUspawn.y, 'powerUp3').setScale(1);
         this.powerUp.body.allowGravity = false;
         this.physics.add.overlap(this.powerUp, this.player, () => {
+            this.powerUp_sound.play();
             this.powerUp.destroy();
             this.addInvincibilityTimer();
 
@@ -534,19 +539,23 @@ class Play3 extends Phaser.Scene {
                 playerWalking = true;
                 this.player.setFlip(true, false);
                 facingRight = false;
+                this.building=false;
             } else if (cursors.right.isDown) {  //right arrow key down
                 this.player.body.setAccelerationX(this.ACCELERATION);
                 playerWalking = true;
                 this.player.resetFlip();
                 facingRight = true;
+                this.building=false;
             } else if (!this.spacebar.isDown && !cursors.down.isDown) {
                 //set acceleration to 0 so drag will take over
                 this.player.body.setAccelerationX(0);
                 this.walking_sound.stop();
                 playerWalking = false;
                 this.player.body.setDragX(this.DRAG);
+                this.building=false;
             }
             if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {    //spacebar key down
+                this.building=true;
                 if (this.currentTowers == this.MAX_TOW) {
                     var destroyTow = this.towers.getFirstAlive();
                     destroyTow.destroy();
@@ -574,6 +583,7 @@ class Play3 extends Phaser.Scene {
                         this.topTower2.alpha = 1;
                     }
                 }
+                this.building=false;
             }
 
             if (playerWalking && this.player.body.blocked.down) {
@@ -609,6 +619,7 @@ class Play3 extends Phaser.Scene {
             if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 250)) {
                 this.player.body.velocity.y = this.JUMP_VELOCITY;
                 this.jumping = true;
+                this.building=false;
                 this.jumping_sound.play();
                 this.player.setTexture('characterJump');
             }

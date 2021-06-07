@@ -74,3 +74,4 @@ let puzzle1Scene=false;
 let foundKey1=false;
 let foundKey2=false;
 let foundKey3=false;
+let level1=false;
